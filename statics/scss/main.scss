@@ -1,0 +1,31 @@
+@import "bootstrap/components/mixins/banner";
+@include bsBanner("");
+
+@font-face {
+    font-family: 'Samim';
+    src: url('../fonts/Samim-FD.eot'); /* IE9 Compat Modes */
+    src: url('../fonts/Samim-FD.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+         url('../fonts/Samim-FD.woff2') format('woff2'), /* Super Modern Browsers */
+         url('../fonts/Samim-FD.woff') format('woff'), /* Pretty Modern Browsers */
+         url('../fonts/Samim-FD.ttf')  format('truetype'); /* Safari, Android, iOS */
+    font-weight: normal;
+}
+@font-face {
+    font-family: 'Samim';
+    src: url('../fonts/Samim-Bold-FD.eot'); /* IE9 Compat Modes */
+    src: url('../fonts/Samim-Bold-FD.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+         url('../fonts/Samim-Bold-FD.woff2') format('woff2'), /* Super Modern Browsers */
+         url('../fonts/Samim-Bold-FD.woff') format('woff'), /* Pretty Modern Browsers */
+         url('../fonts/Samim-Bold-FD.ttf')  format('truetype'); /* Safari, Android, iOS */
+    font-weight: bold;
+}
+
+
+// Include any default variable overrides here (though functions won't be available) 
+
+
+@import "bootstrap/bootstrap";
+
+
+// Then add additional custom code here
+
