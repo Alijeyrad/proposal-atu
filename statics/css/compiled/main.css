@@ -13,12 +13,6 @@
 }
 @font-face {
   font-family: "Samim";
-  src: url("../fonts/Samim-Medium-FD.eot"); /* IE9 Compat Modes */
-  src: url("../fonts/Samim-Medium-FD.eot?#iefix") format("embedded-opentype"), url("../fonts/Samim-Medium-FD.woff2") format("woff2"), url("../fonts/Samim-Medium-FD.woff") format("woff"), url("../fonts/Samim-Medium-FD.ttf") format("truetype"); /* Safari, Android, iOS */
-  font-weight: medium;
-}
-@font-face {
-  font-family: "Samim";
   src: url("../fonts/Samim-Bold-FD.eot"); /* IE9 Compat Modes */
   src: url("../fonts/Samim-Bold-FD.eot?#iefix") format("embedded-opentype"), url("../fonts/Samim-Bold-FD.woff2") format("woff2"), url("../fonts/Samim-Bold-FD.woff") format("woff"), url("../fonts/Samim-Bold-FD.ttf") format("truetype"); /* Safari, Android, iOS */
   font-weight: bold;
@@ -6029,8 +6023,8 @@ textarea.form-control-lg {
 }
 .offcanvas, .offcanvas-xxl, .offcanvas-xl, .offcanvas-lg, .offcanvas-md, .offcanvas-sm {
   --bs-offcanvas-zindex: 1045;
-  --bs-offcanvas-width: 400px;
-  --bs-offcanvas-height: 30vh;
+  --bs-offcanvas-width: 260px;
+  --bs-offcanvas-height: 621px;
   --bs-offcanvas-padding-x: 1rem;
   --bs-offcanvas-padding-y: 1rem;
   --bs-offcanvas-color: ;
@@ -10745,6 +10739,11 @@ textarea.form-control-lg {
 .navbar {
   height: 72px !important;
   border-radius: 0 0 20px 20px;
+  box-shadow: 0px 0px 0px 0px rgba(0, 0, 0, 0.13), 0px 1px 2px 0px rgba(0, 0, 0, 0.13), 0px 3px 3px 0px rgba(0, 0, 0, 0.11), 0px 6px 4px 0px rgba(0, 0, 0, 0.07), 0px 11px 4px 0px rgba(0, 0, 0, 0.02), 0px 17px 5px 0px rgba(0, 0, 0, 0);
+}
+
+.navbar-panel {
+  z-index: 1046;
 }
 
 .navbar-toggler {
@@ -10776,4 +10775,53 @@ textarea.form-control-lg {
 .a-wrapper .a-item {
   position: relative !important;
   z-index: 1 !important;
+}
+
+.offcanvas {
+  border-radius: 10px;
+  border: none !important;
+  height: 310px;
+  box-shadow: 0px 4px 10px 0px rgba(0, 0, 0, 0.12);
+}
+
+.offcanvas-panel {
+  translate: 0 72px;
+  height: 621px !important;
+}
+
+.sidebar-item {
+  padding: 10px;
+  border-radius: 4px;
+  height: 46px;
+  text-decoration: none;
+  color: #0A0A0B;
+  font-weight: 400;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  font-size: 14px;
+}
+.sidebar-item.current {
+  background-color: rgba(61, 213, 243, 0.2);
+}
+.sidebar-item i {
+  padding-right: 20px;
+}
+.sidebar-item:hover i {
+  opacity: 0.75;
+}
+
+.btn-primary:hover {
+  box-shadow: 0px 0px 0px 0px rgba(0, 0, 0, 0.13), 0px 1px 2px 0px rgba(0, 0, 0, 0.13), 0px 3px 3px 0px rgba(0, 0, 0, 0.11), 0px 6px 4px 0px rgba(0, 0, 0, 0.07), 0px 11px 4px 0px rgba(0, 0, 0, 0.02), 0px 17px 5px 0px rgba(0, 0, 0, 0);
+  background-color: #0DCAF0;
+  border-color: #0DCAF0;
+}
+
+.btn-outline-primary {
+  background-color: #FFF;
+  color: #3DD5F3;
+}
+.btn-outline-primary:hover {
+  background-color: rgba(13, 202, 240, 0.3019607843);
+  color: #0DCAF0;
 }

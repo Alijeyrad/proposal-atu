@@ -38,6 +38,10 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    # third party libraries
+    'phonenumber_field',
+
+    # my apps
     'accounts',
     'home',
     'panel',
@@ -136,3 +140,5 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 AUTH_USER_MODEL = 'accounts.User'
+
+PHONENUMBER_DEFAULT_REGION = 'IR'

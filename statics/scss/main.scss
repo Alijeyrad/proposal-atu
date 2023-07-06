@@ -10,15 +10,15 @@
          url('../fonts/Samim-FD.ttf')  format('truetype'); /* Safari, Android, iOS */
     font-weight: normal;
 }
-@font-face {
-    font-family: 'Samim';
-    src: url('../fonts/Samim-Medium-FD.eot'); /* IE9 Compat Modes */
-    src: url('../fonts/Samim-Medium-FD.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
-         url('../fonts/Samim-Medium-FD.woff2') format('woff2'), /* Super Modern Browsers */
-         url('../fonts/Samim-Medium-FD.woff') format('woff'), /* Pretty Modern Browsers */
-         url('../fonts/Samim-Medium-FD.ttf')  format('truetype'); /* Safari, Android, iOS */
-    font-weight: medium;
-}
+// @font-face {
+//     font-family: 'Samim';
+//     src: url('../fonts/Samim-Medium-FD.eot'); /* IE9 Compat Modes */
+//     src: url('../fonts/Samim-Medium-FD.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+//          url('../fonts/Samim-Medium-FD.woff2') format('woff2'), /* Super Modern Browsers */
+//          url('../fonts/Samim-Medium-FD.woff') format('woff'), /* Pretty Modern Browsers */
+//          url('../fonts/Samim-Medium-FD.ttf')  format('truetype'); /* Safari, Android, iOS */
+//     font-weight: medium;
+// }
 @font-face {
     font-family: 'Samim';
     src: url('../fonts/Samim-Bold-FD.eot'); /* IE9 Compat Modes */
@@ -54,6 +54,9 @@ $btn-font-size: 16px;
 $btn-white-space: 'nowrap';
 $btn-font-weight: bold;
 
+$offcanvas-horizontal-width: 260px;
+$offcanvas-vertical-height: 621px;
+
 @import "bootstrap/bootstrap";
 
 
@@ -62,6 +65,11 @@ $btn-font-weight: bold;
 .navbar {
     height: 72px !important;
     border-radius: 0 0 20px 20px;
+    box-shadow: 0px 0px 0px 0px rgba(0, 0, 0, 0.13), 0px 1px 2px 0px rgba(0, 0, 0, 0.13), 0px 3px 3px 0px rgba(0, 0, 0, 0.11), 0px 6px 4px 0px rgba(0, 0, 0, 0.07), 0px 11px 4px 0px rgba(0, 0, 0, 0.02), 0px 17px 5px 0px rgba(0, 0, 0, 0.00);
+}
+
+.navbar-panel {
+    z-index: 1046;
 }
 
 .navbar-toggler {
@@ -100,5 +108,60 @@ $btn-font-weight: bold;
     & .a-item {
         position: relative !important;
         z-index: 1 !important;
+    }
+}
+
+.offcanvas {
+    border-radius: 10px;
+    border: none !important;
+    height: 310px;
+    box-shadow: 0px 4px 10px 0px rgba(0, 0, 0, 0.12);
+}
+
+.offcanvas-panel {
+    translate: 0 72px;
+    height: 621px !important;
+}
+
+.sidebar-item {
+    &.current {
+        background-color: #3DD5F333;
+    }
+
+    & i {
+        padding-right: 20px;
+        
+    }
+    
+    &:hover i {
+        opacity: .75;
+    }
+
+    padding: 10px;
+    border-radius: 4px;
+    height: 46px;
+    text-decoration: none;
+    color: $black;
+    font-weight: 400;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    font-size: 14px;
+
+}
+
+.btn-primary:hover {
+    box-shadow: 0px 0px 0px 0px rgba(0, 0, 0, 0.13), 0px 1px 2px 0px rgba(0, 0, 0, 0.13), 0px 3px 3px 0px rgba(0, 0, 0, 0.11), 0px 6px 4px 0px rgba(0, 0, 0, 0.07), 0px 11px 4px 0px rgba(0, 0, 0, 0.02), 0px 17px 5px 0px rgba(0, 0, 0, 0.00);
+    background-color: #0DCAF0;
+    border-color: #0DCAF0;
+}
+
+.btn-outline-primary {
+    background-color: $white;
+    color: $primary;
+
+    &:hover {
+        background-color: #0DCAF04D;
+        color: #0DCAF0;
     }
 }
