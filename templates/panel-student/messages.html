@@ -4,5 +4,23 @@
 {% block styles %}{% endblock styles %}
 
 {% block body %}
+    <div class="container panel-container pb-5">
+        <h4 class="fw-bold">پیام‌ها</h4>
+        <h6 class="text-secondary mb-5">در این بخش می‌توانید با اساتید خود مکاتبه کنید. تمام چک‌ کردن‌های فایل‌های خود را اینجا انجام دهید.</h6>
 
+        <div class="bg-white shadow d-flex flex-column align-items-start mb-3 mt-5 p-4 rounded-4 border">
+            <h6><span class="text-secondary">مخاطب: </span>دکتر مهدی خانجانی</h6>
+            <p><small class="text-secondary">عنوان: </small>استاد راهنمای شما</p>
+            <button type="button" class="btn btn-primary">باز کردن چت</button>
+        </div>
+        
+        <div class="bg-white shadow d-flex flex-column align-items-start mb-3 mt-3 p-4 rounded-4 border">
+            <h6><span class="text-secondary">مخاطب: </span>دکتر حسین اسکندری</h6>
+            <p><small class="text-secondary">عنوان: </small>استاد مشاور شما</p>
+            <button type="button" class="btn btn-primary">باز کردن چت</button>
+        </div>
+    </div>
 {% endblock body %}
+
+{% block script %}
+{% endblock script %}

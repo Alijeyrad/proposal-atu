@@ -4,5 +4,60 @@
 {% block styles %}{% endblock styles %}
 
 {% block body %}
+    <div x-data="{edit: false}" class="container panel-container">
+        <h4 class="fw-bold">اطلاعات پروپوزال</h4>
+        <h6 class="text-secondary">در این بخش می‌توانید اطلاعات کلی پروپوزال خود را مشاهده کنید.</h6>
 
+        <div class="bg-white shadow d-flex flex-column align-items-center mt-4 py-5 rounded-4">
+            <i class="bi bi-plus-circle text-secondary" style="font-size: 100px"></i>
+            <p>آخرین ویرایش فایل پروپوزال خود را آپلود کنید.</p>
+            <button type="button" class="btn btn-primary">انتخاب فایل</button>
+        </div>
+
+        <p class="text-info mt-4 mb-5">لطفاً پس از هر ویرایش، آخرین نسخه پروپوزال خود را آپلود کنید.</p>
+
+        <div :class="edit ? 'd-none' : ''"
+        x-show="!edit"
+        style="transition: all 1s"
+        x-transition:enter-start="opacity-0"
+        x-transition:enter-end="opacity-100"
+        class="bg-white shadow d-flex flex-column align-items-start mb-5 p-4 rounded-4 border"
+        >
+            <h6>اطلاعات پروپوزال</h6>
+            <p>عنوان: </p>
+            <p>رشته: </p>
+            <p>استاد راهنما: </p>
+            <p>استاد مشاور: </p>
+            <p>تاریخ تصویب: </p>
+            <button @click="edit=!edit" type="button" class="btn btn-primary">ویرایش اطلاعات</button>
+        </div>
+        
+        <div :class="edit ? '' : 'd-none'"
+        x-show="edit"
+        style="transition: all 1s"
+        x-transition:enter-start="opacity-0"
+        x-transition:enter-end="opacity-100"
+        class="bg-white shadow d-flex flex-column align-items-start mb-5 p-4 rounded-4 border"
+        >
+            <h6>اطلاعات پروپوزال</h6>
+            <form>
+                <div class="mb-3">
+                  <label for="exampleInputEmail1" class="form-label">عنوان</label>
+                  <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+                </div>
+                
+                <p>استاد راهنما: </p>
+                
+                <p>استاد مشاور: </p>
+                
+            </form>
+            <div class="d-flex align-items-center">
+                <button @click="edit=!edit" type="button" class="btn btn-outline-primary">ذخیره تغییرات</button>
+                <button @click="edit=!edit" type="button" class="btn btn-link d-flex align-items-baseline">بازگشت</button>
+            </div>
+        </div>
+    </div>
 {% endblock body %}
+
+{% block script %}
+{% endblock script %}

@@ -40,7 +40,7 @@
     <div class="offcanvas offcanvas-start offcanvas-panel" tabindex="-1" id="offcanvas" aria-labelledby="offcanvasLabel" data-bs-scroll="true" data-bs-backdrop="false" >
         {% comment %} displays in lg and up without close button {% endcomment %}
         <div class="offcanvas-header pb-0">
-            <h5 class="offcanvas-title" >دکتر مهدی خانجانی</h5>
+            <h6 class="offcanvas-title" >دکتر مهدی خانجانی</h6>
             <button type="button" class="btn-close d-lg-none" data-bs-dismiss="offcanvas" aria-label="Close"></button>
         </div>
 
@@ -81,7 +81,6 @@
                     <i class="bi bi-box-arrow-right fs-4" style="color:#EB1804;"></i>
                     خروج
                 </a>
-            {% comment %} {{request.resolver_match.view_name}} {% endcomment %}
             </div>
         </div>
     </div>
@@ -89,9 +88,9 @@
     {% block body %}{% endblock body %}
 
 
-    {% block scripts %}{% endblock scripts %}
     <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
     <script src="{% static 'js/myOffcanvas.js' %}"></script>
     <script src="{% static 'js/alpine.js' %}"></script>
+    {% block scripts %}{% endblock scripts %}
 </body>
 </html>

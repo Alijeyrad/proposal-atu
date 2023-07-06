@@ -37,11 +37,11 @@
     </nav>
 
     {% comment %} offcanvas {% endcomment %}
-    <div class="offcanvas offcanvas-start offcanvas-panel" tabindex="-1" id="offcanvas" aria-labelledby="offcanvasLabel" data-bs-scroll="true" data-bs-backdrop="false" >
+    <div class="offcanvas offcanvas-start offcanvas-panel" tabindex="-1" id="offcanvas" data-bs-scroll="true" data-bs-backdrop="false">
         {% comment %} displays in lg and up without close button {% endcomment %}
         <div class="offcanvas-header pb-0">
             <div class="d-flex flex-column" style="translate: 0 10px">
-                <h5 class="offcanvas-title" >محمد مهدی شیخی</h5>
+                <h6 class="offcanvas-title" >محمد مهدی شیخی</h6>
                 <p>511100171</p>
             </div>
             <button type="button" class="btn-close d-lg-none" data-bs-dismiss="offcanvas" aria-label="Close"></button>
@@ -50,29 +50,30 @@
         <div class="offcanvas-body">
             <div class="d-grid gap-1">
                 
-                <a class="sidebar-item " href="#">
+                <a class="sidebar-item {% if request.resolver_match.view_name == 'panel:proposal_info' %}current{% endif %}" href="{% url 'panel:proposal_info' %}">
                     <i class="bi bi-house-fill fs-4" style="color:#3DD5F3;"></i>
                     اطلاعات پروپوزال
                 </a>
             
-                <a class="sidebar-item current" href="#">
+                <a class="sidebar-item {% if request.resolver_match.view_name == 'panel:proposal_accept_request' %}current{% endif %}" href="{% url 'panel:proposal_accept_request' %}">
                     <i class="bi bi-card-text fs-4" style="color:#BA27FF;"></i>
                     درخواست تصویب پروپوزال
                 </a>
             
-                <a class="sidebar-item" href="#">
+                <a class="sidebar-item {% if request.resolver_match.view_name == 'panel:dissertation_info' %}current{% endif %}" href="{% url 'panel:dissertation_info' %}">
                     <i class="bi bi-book-half fs-4" style="color:#FF0099;"></i>
                     اطلاعات پایان‌نامه
                 </a>
             
-                <a class="sidebar-item" href="#">
+                <a class="sidebar-item {% if request.resolver_match.view_name == 'panel:defa_request' %}current{% endif %}" href="{% url 'panel:defa_request' %}">
                     <i class="bi bi-check-lg fs-4" style="color:#14FF9C;"></i>
                     درخواست دفاع
                 </a>
                 
-                <a class="sidebar-item" href="#">
+                <a class="sidebar-item {% if request.resolver_match.view_name == 'panel:student_messages' or request.resolver_match.view_name == 'panel:student_chat' %}current{% endif %}" href="{% url 'panel:student_messages' %}">
                     <i class="bi bi-chat-left-text fs-4" style="color:#FF77B8;"></i>
                     پیام‌ها
+                    <span class="badge text-bg-danger" style="translate: -78px 0;font-size:9px;">پیام جدید</span>
                 </a>
                 
                 <a class="sidebar-item" href="{% url 'logout' %}">
@@ -86,9 +87,9 @@
     {% block body %}{% endblock body %}
 
 
-    {% block scripts %}{% endblock scripts %}
     <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
     <script src="{% static 'js/myOffcanvas.js' %}"></script>
     <script src="{% static 'js/alpine.js' %}"></script>
+    {% block scripts %}{% endblock scripts %}
 </body>
 </html>

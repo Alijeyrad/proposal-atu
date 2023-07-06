@@ -8,17 +8,17 @@
          url('../fonts/Samim-FD.woff2') format('woff2'), /* Super Modern Browsers */
          url('../fonts/Samim-FD.woff') format('woff'), /* Pretty Modern Browsers */
          url('../fonts/Samim-FD.ttf')  format('truetype'); /* Safari, Android, iOS */
-    font-weight: normal;
+    font-weight: 400;
 }
-// @font-face {
-//     font-family: 'Samim';
-//     src: url('../fonts/Samim-Medium-FD.eot'); /* IE9 Compat Modes */
-//     src: url('../fonts/Samim-Medium-FD.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
-//          url('../fonts/Samim-Medium-FD.woff2') format('woff2'), /* Super Modern Browsers */
-//          url('../fonts/Samim-Medium-FD.woff') format('woff'), /* Pretty Modern Browsers */
-//          url('../fonts/Samim-Medium-FD.ttf')  format('truetype'); /* Safari, Android, iOS */
-//     font-weight: medium;
-// }
+@font-face {
+    font-family: 'Samim';
+    src: url('../fonts/Samim-Medium-FD.eot'); /* IE9 Compat Modes */
+    src: url('../fonts/Samim-Medium-FD.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+         url('../fonts/Samim-Medium-FD.woff2') format('woff2'), /* Super Modern Browsers */
+         url('../fonts/Samim-Medium-FD.woff') format('woff'), /* Pretty Modern Browsers */
+         url('../fonts/Samim-Medium-FD.ttf')  format('truetype'); /* Safari, Android, iOS */
+    font-weight: medium;
+}
 @font-face {
     font-family: 'Samim';
     src: url('../fonts/Samim-Bold-FD.eot'); /* IE9 Compat Modes */
@@ -26,7 +26,7 @@
          url('../fonts/Samim-Bold-FD.woff2') format('woff2'), /* Super Modern Browsers */
          url('../fonts/Samim-Bold-FD.woff') format('woff'), /* Pretty Modern Browsers */
          url('../fonts/Samim-Bold-FD.ttf')  format('truetype'); /* Safari, Android, iOS */
-    font-weight: bold;
+    font-weight: 700;
 }
 
 * {
@@ -36,6 +36,7 @@
 // Include any default variable overrides here (though functions won't be available) 
 
 $blue: #3DD5F3;
+$hover: #0DCAF0;
 $white: #FFF;
 $black: #0A0A0B;
 $gray: #6C757D;
@@ -43,6 +44,12 @@ $success: #28A745;
 $danger: #DC3545;
 $warning: #FFC107;
 $info: #17A2B8;
+$light: #f8f9fa;
+$chat-green: #20C997;
+$chat-green-bg: rgba(12, 166, 120, 0.20);
+
+$headings-font-weight: 700;
+$headings-line-height: normal;
 
 $navbar-toggler-font-size: 16px;
 $navbar-toggler-focus-width: 1px;
@@ -57,10 +64,28 @@ $btn-font-weight: bold;
 $offcanvas-horizontal-width: 260px;
 $offcanvas-vertical-height: 621px;
 
+$form-file-button-color: $white;
+$form-file-button-bg: $blue;
+$form-file-button-hover-bg: $hover;
+
 @import "bootstrap/bootstrap";
 
 
 // Then add additional custom code here
+
+h1 {font-size: 60px;}
+h2 {font-size: 40px;}
+h3 {font-size: 36px;}
+h4 {font-size: 32px;}
+h5 {font-size: 24px;}
+h6 {font-size: 20px;}
+p {font-size: 16px;}
+small {font-size: 14px;}
+
+textarea {
+    resize: none;
+    outline: none;
+}
 
 .navbar {
     height: 72px !important;
@@ -116,6 +141,7 @@ $offcanvas-vertical-height: 621px;
     border: none !important;
     height: 310px;
     box-shadow: 0px 4px 10px 0px rgba(0, 0, 0, 0.12);
+    position: absolute;
 }
 
 .offcanvas-panel {
@@ -130,7 +156,6 @@ $offcanvas-vertical-height: 621px;
 
     & i {
         padding-right: 20px;
-        
     }
     
     &:hover i {
@@ -150,6 +175,10 @@ $offcanvas-vertical-height: 621px;
 
 }
 
+.panel-container {
+    margin-top: 25px !important;
+}
+
 .btn-primary:hover {
     box-shadow: 0px 0px 0px 0px rgba(0, 0, 0, 0.13), 0px 1px 2px 0px rgba(0, 0, 0, 0.13), 0px 3px 3px 0px rgba(0, 0, 0, 0.11), 0px 6px 4px 0px rgba(0, 0, 0, 0.07), 0px 11px 4px 0px rgba(0, 0, 0, 0.02), 0px 17px 5px 0px rgba(0, 0, 0, 0.00);
     background-color: #0DCAF0;
@@ -163,5 +192,64 @@ $offcanvas-vertical-height: 621px;
     &:hover {
         background-color: #0DCAF04D;
         color: #0DCAF0;
+    }
+}
+
+.chat-wrapper {
+    height: 579px !important;
+    padding: 18px;
+
+    .messages {
+        height: 300px !important;
+        overflow: scroll;
+        display: flex;
+        flex-direction: column;
+
+        .single-message {
+            width: fit-content;
+            max-width: 260px;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid $chat-green;
+            padding: 16px 24px;
+            margin-bottom: 16px;
+            
+            &.sender {
+                border-radius: 40px 40px 0 40px;
+                background-color: $chat-green-bg;
+                align-self: flex-end;
+            }
+            
+            &.receiver {
+                border-radius: 40px 40px 40px 0;
+                align-self: flex-start;
+            }
+
+            p {
+                font-weight: 500;
+            }
+            
+        }
+    }
+    
+}
+
+// media queries
+
+@include media-breakpoint-up(lg) {
+    // styles for large (lg) and larger screens
+    .panel-container {
+        padding-left: 240.5px !important;
+    }
+}
+
+@include media-breakpoint-up(md) {
+    // styles for medium (md) and larger screens
+    .chat-wrapper {
+        .messages {
+            .single-message {
+                max-width: 500px;
+            }
+        }
     }
 }

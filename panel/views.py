@@ -9,7 +9,7 @@ def proposal_info(request):
 
 
 def proposal_accept_request(request):
-    return render(request, 'panel-student/proposal-accept-request-info.html')
+    return render(request, 'panel-student/proposal-accept-request.html')
 
 
 
@@ -24,8 +24,8 @@ def defa_request(request):
 
 
 def student_messages(request):
-    return render(request, 'panel-student/student-messages.html')
+    return render(request, 'panel-student/messages.html')
 
 
 def student_chat(request):
-    return render(request, 'panel-student/student-chat.html')
+    return render(request, 'panel-student/chat.html')
