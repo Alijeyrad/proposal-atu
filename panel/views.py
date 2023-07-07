@@ -1,7 +1,6 @@
 from django.shortcuts import render
 
-# Create your views here.
-
+# Student panel views
 
 def proposal_info(request):
     return render(request, 'panel-student/proposal-info.html')

@@ -201,7 +201,7 @@ textarea {
 
     .messages {
         height: 300px !important;
-        overflow: scroll;
+        overflow: auto;
         display: flex;
         flex-direction: column;
 
@@ -251,5 +251,11 @@ textarea {
                 max-width: 500px;
             }
         }
+    }
+}
+
+@include media-breakpoint-only(lg) {
+    .panel-container {
+        padding-left: 250.5px !important;
     }
 }

@@ -10880,7 +10880,7 @@ textarea {
 }
 .chat-wrapper .messages {
   height: 300px !important;
-  overflow: scroll;
+  overflow: auto;
   display: flex;
   flex-direction: column;
 }
@@ -10914,5 +10914,10 @@ textarea {
 @media (min-width: 768px) {
   .chat-wrapper .messages .single-message {
     max-width: 500px;
+  }
+}
+@media (min-width: 992px) and (max-width: 1199.98px) {
+  .panel-container {
+    padding-left: 250.5px !important;
   }
 }

@@ -47,32 +47,32 @@
         <div class="offcanvas-body">
             <div class="d-grid gap-1">
                 
-                <a class="sidebar-item " href="#">
+                <a class="sidebar-item {% if request.resolver_match.view_name == 'panel_prof:proposal_info' %}current{% endif %}" href="{% url 'panel_prof:proposal_info' %}">
                     <i class="bi bi-house-fill fs-4" style="color:#3DD5F3;"></i>
                     پروپوزال‌ها
                 </a>
             
-                <a class="sidebar-item current" href="#">
+                <a class="sidebar-item {% if request.resolver_match.view_name == 'panel_prof:proposal_accept' %}current{% endif %}" href="{% url 'panel_prof:proposal_accept' %}">
                     <i class="bi bi-patch-check fs-4" style="color:#B7BA00;"></i>
                     تأیید پروپروزال‌ها
                 </a>
             
-                <a class="sidebar-item" href="#">
+                <a class="sidebar-item {% if request.resolver_match.view_name == 'panel_prof:proposal_assessment' %}current{% endif %}" href="{% url 'panel_prof:proposal_assessment' %}">
                     <i class="bi bi-book-half fs-4" style="color:#FF0099;"></i>
                     پروپوزال‌های برای ارزیابی
                 </a>
             
-                <a class="sidebar-item" href="#">
+                <a class="sidebar-item {% if request.resolver_match.view_name == 'panel_prof:proposal_judgment' %}current{% endif %}" href="{% url 'panel_prof:proposal_judgment' %}">
                     <i class="bi bi-check-lg fs-4" style="color:#14FF9C;"></i>
                     پایان‌نامه‌های برای داوری
                 </a>
                 
-                <a class="sidebar-item" href="#">
+                <a class="sidebar-item {% if request.resolver_match.view_name == 'panel_prof:prof_messages' %}current{% endif %}" href="{% url 'panel_prof:prof_messages' %}">
                     <i class="bi bi-chat-left-text fs-4" style="color:#FF77B8;"></i>
                     پیام‌ها
                 </a>
                 
-                <a class="sidebar-item" href="#">
+                <a class="sidebar-item {% if request.resolver_match.view_name == 'panel_prof:accept_request' %}current{% endif %}" href="{% url 'panel_prof:accept_request' %}">
                     <i class="bi bi-check2-all fs-4" style="color:#00DF31;"></i>
                     درخواست‌های تصویب
                 </a>

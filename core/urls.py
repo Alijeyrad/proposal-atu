@@ -25,6 +25,7 @@ urlpatterns = [
     path("auth/", include("django.contrib.auth.urls")),
     path('', include('home.urls')),
     path('panel/', include('panel.urls')),
+    path('panel-prof/', include('panel_prof.urls')),
 ]
 
 

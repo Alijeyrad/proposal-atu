@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'accounts',
     'home',
     'panel',
+    'panel_prof',
 ]
 
 MIDDLEWARE = [
