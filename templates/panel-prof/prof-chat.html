@@ -4,30 +4,64 @@
 {% block styles %}{% endblock styles %}
 
 {% block body %}
-    <div class="container panel-container">
-        <h4 class="fw-bold">اطلاعات پروپوزال</h4>
-        <h6 class="text-secondary">در این بخش می‌توانید اطلاعات کلی پروپوزال خود را مشاهده کنید.</h6>
+    <div class="container panel-container pb-5">
+        <h4 class="fw-bold">پیام‌ها</h4>
+        {% comment %} <h6 class="text-secondary mb-5">در این بخش می‌توانید با اساتید خود مکاتبه کنید. تمام چک‌ کردن‌های فایل‌های خود را اینجا انجام دهید.</h6> {% endcomment %}
 
-        <div class="bg-white shadow d-flex flex-column align-items-center mt-4 py-5 rounded-4">
-            <i class="bi bi-plus-circle text-secondary" style="font-size: 100px"></i>
-            <p>آخرین ویرایش فایل پروپوزال خود را آپلود کنید.</p>
-            <button type="button" class="btn btn-primary">انتخاب فایل</button>
+        <div class="chat-wrapper bg-white shadow d-flex flex-column align-items-start mb-3 mt-5 p-4 rounded-2 border">
+            <div class="messages w-100">
+
+                <div class="single-message receiver">
+                    <small>محمدمهدی شیخی</small>
+                    <p>چند دقیقه وقت دارید؟</p>
+                    <small class="text-muted align-self-end">3 دقیقه پیش</small>
+                </div>
+
+                <div class="single-message sender">
+                    <small>دکتر مهدی خانجانی</small>
+                    <p>سلام وقت شما هم بخیر</p>
+                    <small class="text-muted align-self-end">3 دقیقه پیش</small>
+                </div>
+
+                <div class="single-message receiver">
+                    <small>محمدمهدی شیخی</small>
+                    <p class="text-info">پروپوزال.docx</p>
+                    <small class="text-muted align-self-end">3 دقیقه پیش</small>
+                </div>
+                
+                <div class="single-message receiver">
+                    <small>محمدمهدی شیخی</small>
+                    <p>این فایل سشیب شسخشصقل سیهذسمر ظزیدتاسد اشیبهعزله نشتسی مناسبه؟</p>
+                    <small class="text-muted align-self-end">3 دقیقه پیش</small>
+                </div>
+
+            </div>
+
+            <form class="chat-form w-100">
+                <div class="mb-3">
+                    <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" placeholder="متن پیام"></textarea>
+                </div>
+
+                <div class="mb-3">
+                    <label for="formFile" class="form-label">فایل ضمیمه خود را انتخاب کنید</label>
+                    <input class="form-control" type="file" id="formFile" placeholder="hi">
+                </div>
+
+                <div class="d-flex align-items-center justify-content-center">
+                    <button type="button" class="btn btn-primary">ارسال پیام</button>
+                </div>
+            </form>
         </div>
-
-        <p class="text-info mt-4 mb-5">لطفاً پس از هر ویرایش، آخرین نسخه پروپوزال خود را آپلود کنید.</p>
-
-        <div class="bg-white shadow d-flex flex-column align-items-start mb-5 p-4 rounded-4 border">
-            <h6>اطلاعات پروپوزال</h6>
-            <p>عنوان: </p>
-            <p>رشته: </p>
-            <p>استاد راهنما: </p>
-            <p>استاد مشاور: </p>
-            <p>تاریخ تصویب: </p>
-            <button type="button" class="btn btn-primary">ویرایش اطلاعات</button>
-        </div>
-    
+        
     </div>
 {% endblock body %}
 
-{% block script %}
-{% endblock script %}
+{% block scripts %}
+<script>
+    function updateScroll(){
+        var element = document.querySelector(".messages");
+        element.scrollTop = element.scrollHeight;
+    }
+    document.addEventListener("DOMContentLoaded", updateScroll())
+</script>
+{% endblock scripts %}

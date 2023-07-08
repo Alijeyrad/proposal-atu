@@ -18,8 +18,8 @@ def proposal_assessment(request):
 
 
 
-def proposal_judgment(request):
-    return render(request, 'panel-prof/proposal-judgment.html')
+def dissertation_judgment(request):
+    return render(request, 'panel-prof/dissertation-judgment.html')
 
 
 

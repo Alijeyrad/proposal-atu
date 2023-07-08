@@ -4,28 +4,177 @@
 {% block styles %}{% endblock styles %}
 
 {% block body %}
-    <div class="container panel-container">
-        <h4 class="fw-bold">اطلاعات پروپوزال</h4>
-        <h6 class="text-secondary">در این بخش می‌توانید اطلاعات کلی پروپوزال خود را مشاهده کنید.</h6>
+    <div x-data="{showProposals: true}" class="container panel-container">
+        <h4 class="fw-bold">پیام‌ها</h4>
+        <h6 class="text-secondary">در این بخش می‌توانید با دانشجویانی که به شما مربوط هستند مکاتبه کنید.</h6>
+        <h6 class="text-secondary">تمام چک‌ کردن‌های فایل‌های خود را اینجا انجام دهید.</h6>
 
-        <div class="bg-white shadow d-flex flex-column align-items-center mt-4 py-5 rounded-4">
-            <i class="bi bi-plus-circle text-secondary" style="font-size: 100px"></i>
-            <p>آخرین ویرایش فایل پروپوزال خود را آپلود کنید.</p>
-            <button type="button" class="btn btn-primary">انتخاب فایل</button>
-        </div>
-
-        <p class="text-info mt-4 mb-5">لطفاً پس از هر ویرایش، آخرین نسخه پروپوزال خود را آپلود کنید.</p>
-
-        <div class="bg-white shadow d-flex flex-column align-items-start mb-5 p-4 rounded-4 border">
-            <h6>اطلاعات پروپوزال</h6>
-            <p>عنوان: </p>
-            <p>رشته: </p>
-            <p>استاد راهنما: </p>
-            <p>استاد مشاور: </p>
-            <p>تاریخ تصویب: </p>
-            <button type="button" class="btn btn-primary">ویرایش اطلاعات</button>
+        <div class="btn-group btn-group-lg w-100 messages-tabs mt-4" role="group" aria-label="Large button group">
+            <button @click="showProposals=true" :class="showProposals ? 'current' : ''" type="button" class="btn btn-outline-primary">پروپوزال‌ها</button>
+            <button @click="showProposals=false" :class="showProposals ? '' : 'current'" type="button" class="btn btn-outline-primary">دفاع‌ها</button>
         </div>
     
+        {% comment %} proposals section {% endcomment %}
+        <div x-cloak x-show.important="showProposals" class="mb-5 mt-4">
+
+            {% comment %} collapse for new proposals {% endcomment %}
+            <div class="accordion mb-4" id="accordionNewProposals">
+
+                <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseNewProposals" aria-expanded="true" aria-controls="collapseNewProposals">
+                        پروپوزال‌های جدید
+                    </button>
+                </h2>
+                <div id="collapseNewProposals" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionNewProposals">
+
+                    <div class="bg-white d-flex flex-column justify-content-start shadow-sm mt-3 p-4 rounded-4 border">
+                        
+                        <div class="d-flex flex-wrap">
+                            <div class="me-5">
+                                <p><span class="text-secondary" style="font-weight:400;">نام دانشجو: </span>محمدمهدی شیخی</p>
+                                <p><span class="text-secondary" style="font-weight:400;">استاد راهنما: </span>دکتر مهدی خانجانی</p>
+                                <p><span class="text-secondary" style="font-weight:400;">رشته: </span>روان‌شناسی عمومی</p>
+                            </div>
+
+                            <div>
+                                <p><span class="text-secondary" style="font-weight:400;">عنوان: </span>بررسی عوامل دموگرافیک بر رضایت از ازدواج</p>
+                                <p><span class="text-secondary" style="font-weight:400;">استاد مشاور: </span>دکتر حسین اسکندری</p>
+                                <p><span class="text-secondary" style="font-weight:400;">تاریخ تصویب: </span>هنوز درخواست تصویب داده نشده</p>
+                            </div>
+                        </div>
+
+                        <div class="d-flex mt-2 mb-3">
+                            <span class="badge text-bg-success fs-6 rounded-pill py-3 px-4 me-2">تأیید استاد راهنما 1</span>
+                            <span class="badge text-bg-success fs-6 rounded-pill py-3 px-4">تأیید استاد مشاور 1</span>
+                        </div>
+
+                        <div class="" style="width:fit-content;">
+                            <button type="button" class="btn btn-primary me-2 mb-2">دانلود فایل</button>
+                            <select class="form-select mb-2" aria-label="Default select example">
+                                <option selected>انتخاب استاد ارزیاب</option>
+                                <option value="1">One</option>
+                                <option value="2">Two</option>
+                                <option value="3">Three</option>
+                            </select>
+                            <button type="button" class="btn btn-primary me-2">ارسال به استاد ارزیاب</button>
+                        </div>
+                    </div>
+                    
+                </div>
+                </div>
+
+            </div>
+        
+
+            {% comment %} collapse for assessed porpposals {% endcomment %}
+            <div class="accordion mb-4" id="accordionAssessedPorpposals">
+
+                <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseAssessedPorpposals" aria-expanded="true" aria-controls="collapseAssessedPorpposals">
+                        تأیید شده توسط استاد ارزیاب
+                    </button>
+                </h2>
+                <div id="collapseAssessedPorpposals" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionAssessedPorpposals">
+
+                    <div class="bg-white d-flex flex-column justify-content-start shadow-sm mt-3 p-4 rounded-4 border">
+                        
+                        <div class="d-flex flex-wrap">
+                            <div class="me-5">
+                                <p><span class="text-secondary" style="font-weight:400;">نام دانشجو: </span>محمدمهدی شیخی</p>
+                                <p><span class="text-secondary" style="font-weight:400;">استاد راهنما: </span>دکتر مهدی خانجانی</p>
+                                <p><span class="text-secondary" style="font-weight:400;">رشته: </span>روان‌شناسی عمومی</p>
+                            </div>
+
+                            <div>
+                                <p><span class="text-secondary" style="font-weight:400;">عنوان: </span>بررسی عوامل دموگرافیک بر رضایت از ازدواج</p>
+                                <p><span class="text-secondary" style="font-weight:400;">استاد مشاور: </span>دکتر حسین اسکندری</p>
+                                <p><span class="text-secondary" style="font-weight:400;">تاریخ تصویب: </span>هنوز درخواست تصویب داده نشده</p>
+                            </div>
+                        </div>
+
+                        <div>
+                            <button type="button" class="btn btn-primary me-2 mt-1">تأیید نهایی</button>
+                            <button type="button" class="btn btn-outline-primary mt-1">دانلود فایل</button>
+                        </div>
+                    </div>
+                    
+                </div>
+                </div>
+
+            </div>
+
+
+            {% comment %} collapse for history {% endcomment %}
+            <div class="accordion mb-5" id="accordionHistory">
+
+                <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseHistory" aria-expanded="true" aria-controls="collapseHistory">
+                        فعالیت‌های گذشته
+                    </button>
+                </h2>
+                <div id="collapseHistory" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionHistory">
+
+                    <div class="bg-white d-flex flex-column justify-content-start shadow-sm mt-3 p-4 rounded-4 border">
+                        
+                        <div class="d-flex flex-wrap">
+                            <div class="me-5">
+                                <p><span class="text-secondary" style="font-weight:400;">نام دانشجو: </span>محمدمهدی شیخی</p>
+                                <p><span class="text-secondary" style="font-weight:400;">استاد راهنما: </span>دکتر مهدی خانجانی</p>
+                                <p><span class="text-secondary" style="font-weight:400;">رشته: </span>روان‌شناسی عمومی</p>
+                            </div>
+
+                            <div>
+                                <p><span class="text-secondary" style="font-weight:400;">عنوان: </span>بررسی عوامل دموگرافیک بر رضایت از ازدواج</p>
+                                <p><span class="text-secondary" style="font-weight:400;">استاد مشاور: </span>دکتر حسین اسکندری</p>
+                                <p><span class="text-secondary" style="font-weight:400;">تاریخ تصویب: </span>هنوز درخواست تصویب داده نشده</p>
+                            </div>
+                        </div>
+
+                        <div>
+                            <span class="badge text-bg-warning fs-6 rounded-pill py-3 px-4">ارسال شده به استاد ارزیاب</span>
+                        </div>
+                    </div>
+
+                    <div class="bg-white d-flex flex-column justify-content-start shadow-sm mt-3 p-4 rounded-4 border">
+                        
+                        <div class="d-flex flex-wrap">
+                            <div class="me-5">
+                                <p><span class="text-secondary" style="font-weight:400;">نام دانشجو: </span>محمدمهدی شیخی</p>
+                                <p><span class="text-secondary" style="font-weight:400;">استاد راهنما: </span>دکتر مهدی خانجانی</p>
+                                <p><span class="text-secondary" style="font-weight:400;">رشته: </span>روان‌شناسی عمومی</p>
+                            </div>
+
+                            <div>
+                                <p><span class="text-secondary" style="font-weight:400;">عنوان: </span>بررسی عوامل دموگرافیک بر رضایت از ازدواج</p>
+                                <p><span class="text-secondary" style="font-weight:400;">استاد مشاور: </span>دکتر حسین اسکندری</p>
+                                <p><span class="text-secondary" style="font-weight:400;">تاریخ تصویب: </span>هنوز درخواست تصویب داده نشده</p>
+                            </div>
+                        </div>
+
+                        <div>
+                            <span class="badge text-bg-success fs-6 rounded-pill py-3 px-4">تأیید شد</span>
+                        </div>
+                    </div>
+                    
+                </div>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        {% comment %} defa section {% endcomment %}
+        <div x-cloak x-show.important="!showProposals">
+            <div class="container text-center mt-5">
+                <i class="bi bi-sign-dead-end" style="font-size:100px"></i>
+                <h6>این بخش در دست ساخت است!</h6>
+            </div>
+        </div>
+
     </div>
 {% endblock body %}
 

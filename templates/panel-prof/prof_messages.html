@@ -4,28 +4,50 @@
 {% block styles %}{% endblock styles %}
 
 {% block body %}
-    <div class="container panel-container">
-        <h4 class="fw-bold">اطلاعات پروپوزال</h4>
-        <h6 class="text-secondary">در این بخش می‌توانید اطلاعات کلی پروپوزال خود را مشاهده کنید.</h6>
+    <div x-data="{showStudentMessages: true}" class="container panel-container">
+        <h4 class="fw-bold">پیام‌ها</h4>
+        <h6 class="text-secondary">در این بخش می‌توانید با دانشجویانی که به شما مربوط هستند مکاتبه کنید.</h6>
+        <h6 class="text-secondary">تمام چک‌ کردن‌های فایل‌های خود را اینجا انجام دهید.</h6>
 
-        <div class="bg-white shadow d-flex flex-column align-items-center mt-4 py-5 rounded-4">
-            <i class="bi bi-plus-circle text-secondary" style="font-size: 100px"></i>
-            <p>آخرین ویرایش فایل پروپوزال خود را آپلود کنید.</p>
-            <button type="button" class="btn btn-primary">انتخاب فایل</button>
-        </div>
-
-        <p class="text-info mt-4 mb-5">لطفاً پس از هر ویرایش، آخرین نسخه پروپوزال خود را آپلود کنید.</p>
-
-        <div class="bg-white shadow d-flex flex-column align-items-start mb-5 p-4 rounded-4 border">
-            <h6>اطلاعات پروپوزال</h6>
-            <p>عنوان: </p>
-            <p>رشته: </p>
-            <p>استاد راهنما: </p>
-            <p>استاد مشاور: </p>
-            <p>تاریخ تصویب: </p>
-            <button type="button" class="btn btn-primary">ویرایش اطلاعات</button>
+        <div class="btn-group btn-group-lg w-100 messages-tabs mt-4" role="group" aria-label="Large button group">
+            <button @click="showStudentMessages=true" :class="showStudentMessages ? 'current' : ''" type="button" class="btn btn-outline-primary">دانشجویان</button>
+            <button @click="showStudentMessages=false" :class="showStudentMessages ? '' : 'current'" type="button" class="btn btn-outline-primary">استادان</button>
         </div>
     
+
+        {% comment %} student messages {% endcomment %}
+        <div x-cloak x-show.important="showStudentMessages" class="mb-5">
+            <div class="bg-white shadow d-flex flex-column align-items-start mb-3 mt-5 p-4 rounded-4 border">
+                <h6><span class="text-secondary">مخاطب: </span>محمدمهدی شیخی</h6>
+                <p><small class="text-secondary">مقطع: </small>کارشناسی ارشد</p>
+                <p><small class="text-secondary">رشته: </small>روان‌شناسی عمومی</p>
+                <p><small class="text-secondary">عنوان شما: </small>استاد راهنما</p>
+                <button type="button" class="btn btn-primary">باز کردن چت</button>
+            </div>
+            
+            <div class="bg-white shadow d-flex flex-column align-items-start mb-3 mt-5 p-4 rounded-4 border">
+                <h6><span class="text-secondary">مخاطب: </span>نیما سلطانی</h6>
+                <p><small class="text-secondary">مقطع: </small>کارشناسی ارشد</p>
+                <p><small class="text-secondary">رشته: </small>روان‌شناسی عمومی</p>
+                <p><small class="text-secondary">عنوان شما: </small>استاد مشاور</p>
+                <button type="button" class="btn btn-primary">باز کردن چت</button>
+            </div>
+        </div>
+
+
+        {% comment %} prof messages {% endcomment %}
+        <div x-cloak x-show.important="!showStudentMessages">
+            <div class="bg-white shadow d-flex flex-column align-items-start mb-3 mt-5 p-4 rounded-4 border">
+                <h6><span class="text-secondary">مخاطب: </span>دکتر عیسی مراد</h6>
+                <button type="button" class="btn btn-primary">باز کردن چت</button>
+            </div>
+            
+            <div class="bg-white shadow d-flex flex-column align-items-start mb-3 mt-5 p-4 rounded-4 border">
+                <h6><span class="text-secondary">مخاطب: </span>دکتر حسین اسکندری</h6>
+                <button type="button" class="btn btn-primary">باز کردن چت</button>
+            </div>
+        </div>
+
     </div>
 {% endblock body %}
 

@@ -8,7 +8,7 @@
          url('../fonts/Samim-FD.woff2') format('woff2'), /* Super Modern Browsers */
          url('../fonts/Samim-FD.woff') format('woff'), /* Pretty Modern Browsers */
          url('../fonts/Samim-FD.ttf')  format('truetype'); /* Safari, Android, iOS */
-    font-weight: 400;
+    font-weight: lighter;
 }
 @font-face {
     font-family: 'Samim';
@@ -26,7 +26,7 @@
          url('../fonts/Samim-Bold-FD.woff2') format('woff2'), /* Super Modern Browsers */
          url('../fonts/Samim-Bold-FD.woff') format('woff'), /* Pretty Modern Browsers */
          url('../fonts/Samim-Bold-FD.ttf')  format('truetype'); /* Safari, Android, iOS */
-    font-weight: 700;
+    font-weight: bold;
 }
 
 * {
@@ -68,10 +68,20 @@ $form-file-button-color: $white;
 $form-file-button-bg: $blue;
 $form-file-button-hover-bg: $hover;
 
+$accordion-border-width: 0;
+$accordion-bg: #f9f9f9;
+$accordion-button-bg: #f9f9f9;
+$accordion-button-active-bg: #f9f9f9;
+$accordion-button-active-color: $black;
+$accordion-icon-color: $blue;
+$accordion-icon-active-color: $blue;
+
 @import "bootstrap/bootstrap";
 
 
 // Then add additional custom code here
+
+[x-cloak] { display: none !important; }
 
 h1 {font-size: 60px;}
 h2 {font-size: 40px;}
@@ -79,8 +89,8 @@ h3 {font-size: 36px;}
 h4 {font-size: 32px;}
 h5 {font-size: 24px;}
 h6 {font-size: 20px;}
-p {font-size: 16px;}
-small {font-size: 14px;}
+p {font-size: 16px; font-weight: normal;}
+small {font-size: 14px; font-weight: lighter;}
 
 textarea {
     resize: none;
@@ -117,12 +127,6 @@ textarea {
         transform-origin: center;
         left: 50%;
     }
-    // &.white:hover::after {
-    //     width: 100%;
-    //     opacity: 1;
-    //     transform: translateX(-50%);
-    //     border-color: $white !important; /* set the border color on hover */
-    // }
     &:hover::after {
         width: 100%;
         opacity: 1;
@@ -230,9 +234,33 @@ textarea {
             }
             
         }
-    }
-    
+    }   
 }
+
+
+.accordion-button {
+    font-size: 20px;
+    font-weight: 700;
+}
+
+
+.accordion-button:after {
+    margin-left: 7px !important;
+    font-size: 26px;
+    font-weight: 700;
+}
+
+
+.messages-tabs {
+    .btn {
+        border-radius: 0;
+    }
+
+    .current {
+        background-color: rgba(61, 213, 243, 0.20);
+    }
+}
+
 
 // media queries
 
