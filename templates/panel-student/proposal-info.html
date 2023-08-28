@@ -4,14 +4,31 @@
 {% block styles %}{% endblock styles %}
 
 {% block body %}
+    <div id="hasFile" class="d-none"></div>
     <div x-data="{edit: false}" class="container panel-container">
         <h4 class="fw-bold">اطلاعات پروپوزال</h4>
         <h6 class="text-secondary">در این بخش می‌توانید اطلاعات کلی پروپوزال خود را مشاهده کنید.</h6>
 
-        <div class="bg-white shadow d-flex flex-column align-items-center mt-4 py-5 rounded-4">
+        <div id="addFile"  class="bg-white shadow d-flex flex-column align-items-center mt-4 py-5 rounded-4">
             <i class="bi bi-plus-circle text-secondary" style="font-size: 100px"></i>
             <p>آخرین ویرایش فایل پروپوزال خود را آپلود کنید.</p>
-            <button type="button" class="btn btn-primary">انتخاب فایل</button>
+            <button type="button" class="btn btn-primary" id="select-file-button">انتخاب فایل</button>
+        </div>
+        
+        <div id="showFile" class="bg-white shadow d-none flex-column align-items-center mt-4 py-5 rounded-4">
+            <i class="bi bi-file-earmark text-secondary" style="font-size: 100px"></i>
+            <p id="file-display">آخرین ویرایش فایل پروپوزال خود را آپلود کنید.</p>
+            <div class="d-flex flex-column justify-content-center align-items-center">
+                <form method="post" enctype="multipart/form-data" class="d-flex flex-column justify-content-center align-items-center">
+                    {% csrf_token %}
+                    <input name="file" type="file" id="file-input" style="display: none;">
+                    <div class="d-flex">
+                        <button type="button" class="btn btn-primary me-3" id="change-file-button">تغییر فایل</button>
+                        <button type="button" class="btn btn-outline-primary">دانلود</button>
+                    </div>
+                    <button type="submit" class="btn btn-primary mt-3" id="change-file-button">اعمال تغییرات</button>
+                </form>
+            </div>
         </div>
 
         <p class="text-info mt-4 mb-5">لطفاً پس از هر ویرایش، آخرین نسخه پروپوزال خود را آپلود کنید.</p>
@@ -59,5 +76,34 @@
     </div>
 {% endblock body %}
 
-{% block script %}
-{% endblock script %}
+{% block scripts %}
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const addFile = document.getElementById("addFile");
+        const showFile = document.getElementById("showFile");
+        const fileDisplay = document.getElementById("file-display");
+        const selectFileButton = document.getElementById("select-file-button");
+        const changeFileButton = document.getElementById("change-file-button");
+        const fileInput = document.getElementById("file-input");
+
+        selectFileButton.addEventListener("click", function() {
+            fileInput.click();
+        });
+
+        changeFileButton.addEventListener("click", function() {
+            fileInput.click();
+        });
+
+        fileInput.addEventListener("change", function(event) {
+            const selectedFile = event.target.files[0];
+            if (selectedFile) {
+                fileDisplay.textContent = selectedFile.name;
+                showFile.classList.remove("d-none");
+                showFile.classList.add("d-flex");
+                addFile.classList.remove("d-flex");
+                addFile.classList.add("d-none");
+            }
+        });
+    });
+</script>
+{% endblock scripts %}

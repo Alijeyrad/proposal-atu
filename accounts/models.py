@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from phonenumber_field.modelfields import PhoneNumberField
+from django_jalali.db import models as jmodels
 
 # Create your models here.
 
@@ -9,11 +10,12 @@ class User(AbstractUser):
         User Model For The App
         storing students and professors
     """
+    jmodels.jManager()
     
     phone_number = PhoneNumberField(blank=True, verbose_name='شماره تلفن')
     
     def __str__(self):
-        return f'{self.first_name} {self.last_name}'
+        return f'{self.email}'
 
 
 class Profile(models.Model):

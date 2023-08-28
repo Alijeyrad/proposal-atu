@@ -139,7 +139,11 @@ STATICFILES_DIRS = [
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-
 AUTH_USER_MODEL = 'accounts.User'
 
 PHONENUMBER_DEFAULT_REGION = 'IR'
+
+# django jalali settings
+LANGUAGE_CODE = 'fa-ir'
+# import locale
+# locale.setlocale(locale.LC_ALL, "fa_IR.UTF-8")
