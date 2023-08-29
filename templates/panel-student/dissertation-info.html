@@ -4,25 +4,156 @@
 {% block styles %}{% endblock styles %}
 
 {% block body %}
-    <div class="container panel-container">
+    <div id="hasFile" class="d-none">{% if dissertation %}true{% else %}false{% endif %}</div>
+    <div id="fileName" class="d-none">{% if dissertation %} {{ dissertation.name }} {% else %}none{% endif %}</div>
+
+    <div x-data="{edit: false}" class="container panel-container">
         <h4 class="fw-bold">اطلاعات پایان‌نامه</h4>
         <h6 class="text-secondary">در این بخش می‌توانید اطلاعات پایان‌نامه خود را مشاهده کنید.</h6>
 
-        <div class="bg-white shadow d-flex flex-column align-items-center mt-4 mb-4 py-5 rounded-4">
+        <div id="addFile" class="bg-white shadow d-flex flex-column align-items-center mt-4 mb-4 py-5 rounded-4">
             <i class="bi bi-plus-circle text-secondary" style="font-size: 100px"></i>
             <p>آخرین ویرایش فایل پایان‌نامه خود را آپلود کنید.</p>
-            <button type="button" class="btn btn-primary">انتخاب فایل</button>
+            <button type="button" class="btn btn-primary" id="select-file-button">انتخاب فایل</button>
         </div>
 
-        <div class="bg-white shadow d-flex flex-column align-items-start mb-5 p-4 rounded-4 border">
-            <h6>اطلاعات پایان‌نامه</h6>
-            <p>عنوان: </p>
-            <p>رشته: </p>
-            <p>استاد راهنما: </p>
-            <p>استاد مشاور: </p>
+        <div id="showFile" class="bg-white shadow d-none flex-column align-items-center mt-4 py-5 rounded-4">
+            <i class="bi bi-file-earmark text-secondary" style="font-size: 100px"></i>
+            <p id="file-display">آخرین ویرایش فایل پایان‌نامه خود را آپلود کنید.</p>
+            <div class="d-flex flex-column justify-content-center align-items-center">
+                <form method="post" enctype="multipart/form-data" class="d-flex flex-column justify-content-center align-items-center">
+                    {% csrf_token %}
+                    <input name="file" type="file" accept=".pdf,.doc,.docx" id="file-input" style="display: none;">
+                    <input type="hidden" name="form_type" value="file_only">
+                    <div class="d-flex">
+                        {% if dissertation %}
+                            <button type="button" class="btn btn-primary me-3" id="change-file-button" {% if dissertation.status == 'در حال تصویب' %}disabled{% endif %}>تغییر فایل</button>
+                            <a type="button" href="{% url 'panel:download_dissertation' dissertation.id %}" target="_blank" class="btn btn-outline-primary">دانلود</a>
+                            {% else %}
+                            <button type="button" class="btn btn-primary" id="change-file-button" {% if dissertation.status == 'در حال تصویب' %}disabled{% endif %}>تغییر فایل</button>
+                        {% endif %}
+                    </div>
+                    <div id="change-file-submit" class="d-none">
+                        <button type="submit" class="btn btn-primary mt-3" {% if dissertation.status == 'در حال تصویب' %}disabled{% endif %}>اعمال تغییرات</button>
+                    </div>
+                </form>
+            </div>
         </div>
+
+        <p class="text-info mt-4 {% if dissertation.status != 'در حال تصویب' %}mb-5{% endif %}">لطفاً پس از هر ویرایش، آخرین نسخه پایان‌نامه خود را آپلود کنید. نام فایلی که آپلود می‌کنید عنوان پایان‌نامه شما خواهد بود.</p>
+        {% if dissertation.status == 'در حال تصویب' %}
+            <p class="text-danger mt-1 mb-5">پایان‌نامه در حال تصویب است، ویرایش اطلاعات امکان ندارد.</p>
+        {% endif %}
+
+
+        {% if dissertation %}
+            <div :class="edit ? 'd-none' : ''"
+            x-show="!edit"
+            style="transition: all 1s"
+            x-transition:enter-start="opacity-0"
+            x-transition:enter-end="opacity-100"
+            class="bg-white shadow d-flex flex-column align-items-start mb-5 p-4 rounded-4 border"
+            >
+                <h6>اطلاعات پایان‌نامه</h6>
+                <p>عنوان: {{ dissertation.name }}</p>
+                <p>رشته: {{ user.profile.study_field }}</p>
+                <p>مقطع: {{ user.profile.maghta }}</p>
+                {% if dissertation.prof_rahnama %}
+                <p>استاد راهنما: {{ dissertation.prof_rahnama.first_name }} {{ dissertation.prof_rahnama.last_name }}</p>
+                {% else %}
+                <p>استاد راهنما: تعیین نشده</p>
+                {% endif %}
+                {% if dissertation.prof_moshaver %}
+                    <p>استاد مشاور: {{ dissertation.prof_moshaver.first_name }} {{ dissertation.prof_moshaver.last_name }}</p>
+                {% else %}
+                    <p>استاد مشاور: تعیین نشده</p>
+                {% endif %}
+                {% comment %} <p>وضعیت: {{ dissertation.status }}</p> {% endcomment %}
+                <button @click="edit=!edit" type="button" class="btn btn-primary" {% if dissertation.status == 'در حال تصویب' %}disabled{% endif %}>ویرایش اطلاعات</button>
+            </div>
+            
+            <div :class="edit ? '' : 'd-none'"
+            x-show="edit"
+            style="transition: all 1s"
+            x-transition:enter-start="opacity-0"
+            x-transition:enter-end="opacity-100"
+            class="bg-white shadow d-flex flex-column align-items-start mb-5 p-4 rounded-4 border"
+            >
+                <h6>اطلاعات پایان‌نامه</h6>
+                <form method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="form_type" value="prof_edit">
+                    <div class="mb-3">
+                        <label for="{{ formProf.prof_rahnama.id_for_label }}" class="form-label">استاد راهنما</label>
+                        <select name="{{ formProf.prof_rahnama.name }}" id="{{ formProf.prof_rahnama.id_for_label }}" class="form-select">
+                            {% for option in formProf.prof_rahnama %}
+                                {{ option }}
+                            {% endfor %}
+                        </select>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="{{ formProf.prof_moshaver.id_for_label }}" class="form-label">استاد مشاور</label>
+                        <select name="{{ formProf.prof_moshaver.name }}" id="{{ formProf.prof_moshaver.id_for_label }}" class="form-select">
+                            {% for option in formProf.prof_moshaver %}
+                                {{ option }}
+                            {% endfor %}
+                        </select>
+                    </div>
+                    
+                    
+                    <div class="d-flex align-items-center">
+                        <button type="submit" class="btn btn-outline-primary">ذخیره تغییرات</button>
+                        <button @click="edit=!edit" type="button" class="btn btn-link d-flex align-items-baseline">بازگشت</button>
+                    </div>
+                </form>
+            </div>
+        {% endif %}
+
     </div>
 {% endblock body %}
 
-{% block script %}
-{% endblock script %}
+{% block scripts %}
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const addFile = document.getElementById("addFile");
+        const showFile = document.getElementById("showFile");
+        const fileDisplay = document.getElementById("file-display");
+        const selectFileButton = document.getElementById("select-file-button");
+        const changeFileButton = document.getElementById("change-file-button");
+        const changeFileSubmit = document.getElementById("change-file-submit");
+        const fileInput = document.getElementById("file-input");
+        const hasFile = document.getElementById("hasFile").textContent.trim() === 'true';
+        const fileName = document.getElementById("fileName").textContent.trim();
+
+        if (hasFile) {
+            showFile.classList.remove("d-none");
+            showFile.classList.add("d-flex");
+            addFile.classList.remove("d-flex");
+            addFile.classList.add("d-none");
+            fileDisplay.textContent = fileName;
+        }
+
+        selectFileButton.addEventListener("click", function() {
+            fileInput.click();
+        });
+       
+        changeFileButton.addEventListener("click", function() {
+            fileInput.click();
+        });
+
+        fileInput.addEventListener("change", function(event) {
+            const selectedFile = event.target.files[0];
+            if (selectedFile) {
+                fileDisplay.textContent = selectedFile.name;
+                showFile.classList.remove("d-none");
+                showFile.classList.add("d-flex");
+                addFile.classList.remove("d-flex");
+                addFile.classList.add("d-none");
+                changeFileSubmit.classList.remove("d-none");
+                changeFileSubmit.classList.add("d-block");
+            }
+        });
+    });
+</script>
+{% endblock scripts %}

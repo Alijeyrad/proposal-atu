@@ -40,7 +40,7 @@
             </div>
         </div>
 
-        <p class="text-info mt-4">لطفاً پس از هر ویرایش، آخرین نسخه پروپوزال خود را آپلود کنید. نام فایلی که آپلود می‌کنید عنوان پروپوزال شما خواهد بود.</p>
+        <p class="text-info mt-4 {% if dissertation.status != 'در حال تصویب' %}mb-5{% endif %}">لطفاً پس از هر ویرایش، آخرین نسخه پروپوزال خود را آپلود کنید. نام فایلی که آپلود می‌کنید عنوان پروپوزال شما خواهد بود.</p>
         {% if proposal.status == 'در حال تصویب' %}
             <p class="text-danger mt-1 mb-5">پروپوزال در حال تصویب است، ویرایش اطلاعات امکان ندارد.</p>
         {% endif %}
@@ -92,7 +92,7 @@
                     </div>
                     
                     <div class="mb-3">
-                        <label for="{{ formProf.prof_moshaver.id_for_label }}" class="form-label">استاد راهنما</label>
+                        <label for="{{ formProf.prof_moshaver.id_for_label }}" class="form-label">استاد مشاور</label>
                         <select name="{{ formProf.prof_moshaver.name }}" id="{{ formProf.prof_moshaver.id_for_label }}" class="form-select">
                             {% for option in formProf.prof_moshaver %}
                                 {{ option }}

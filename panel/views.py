@@ -1,8 +1,8 @@
 import os
 from django.shortcuts import render
 from django.views import View
-from .forms import ProposalFormFile, ProposalFormProf, ProposalFormAccept
-from .models import Proposal
+from .forms import ProposalFormFile, ProposalFormProf, ProposalFormAccept, DissertationFormFile, DissertationFormProf
+from .models import Proposal, Dissertation
 from django.shortcuts import redirect
 from django.http import HttpResponseRedirect, HttpResponse
 from django.core.paginator import Paginator
@@ -53,7 +53,13 @@ class ProposalInfoView(View):
                 return redirect('panel:proposal_info')
         
 
-        return render(request, self.template_name, {'form': form})
+        formFile = ProposalFormFile(instance=proposal)
+        formProf = ProposalFormProf(instance=proposal)
+        return render(request, self.template_name, {
+            'formFile': formFile,
+            'formProf': formProf,
+            'proposal': proposal
+        })
 
 
 
@@ -104,8 +110,48 @@ class ProposalAcceptRequestView(View):
 
 
 
-def dissertation_info(request):
-    return render(request, 'panel-student/dissertation-info.html')
+class DissertationInfoView(View):
+    template_name = 'panel-student/dissertation-info.html'
+
+    def get(self, request, *args, **kwargs):
+        dissertation = Dissertation.objects.filter(owner=request.user.id).first()
+        formFile = DissertationFormFile(instance=dissertation)
+        formProf = DissertationFormProf(instance=dissertation)
+        return render(request, self.template_name, {
+            'formFile': formFile,
+            'formProf': formProf,
+            'dissertation': dissertation
+        })
+
+    def post(self, request, *args, **kwargs):
+        dissertation = Dissertation.objects.filter(owner=request.user.id).first()
+        form_type = request.POST.get('form_type')
+        
+        if form_type == 'file_only':
+            form = DissertationFormFile(request.POST, request.FILES, instance=dissertation)
+            if form.is_valid():
+                dissertation = form.save(commit=False)
+                dissertation.owner = request.user
+                name = request.FILES['file']
+                file_name, file_extention = os.path.splitext(str(name))
+                dissertation.name = file_name
+                dissertation.extention = file_extention[1:]
+                dissertation.save()
+                return redirect('panel:dissertation_info')  # Redirect back to the same page
+        else:
+            form = DissertationFormProf(request.POST, instance=dissertation)
+            if form.is_valid():
+                form.save()
+                return redirect('panel:dissertation_info')
+        
+
+        formFile = DissertationFormFile(instance=dissertation)
+        formProf = DissertationFormProf(instance=dissertation)
+        return render(request, self.template_name, {
+            'formFile': formFile,
+            'formProf': formProf,
+            'dissertation': dissertation
+        })
 
 
 
@@ -126,6 +172,18 @@ def download_proposal(request, id):
     proposal = Proposal.objects.get(pk = id)
     file_name = proposal.name + '.' + proposal.extention
     file_path = proposal.file.path
+
+    mime_type, _ = mimetypes.guess_type(file_path)
+    fl = open(file_path, 'rb')
+    response = HttpResponse(fl, content_type=mime_type)
+    response['Content-Disposition'] = 'attachment; filename=%s' % file_name
+
+    return response
+
+def download_dissertation(request, id):
+    dissertation = Dissertation.objects.get(pk = id)
+    file_name = dissertation.name
+    file_path = dissertation.file.path
 
     mime_type, _ = mimetypes.guess_type(file_path)
     fl = open(file_path, 'rb')
