@@ -4,40 +4,130 @@
 {% block styles %}{% endblock styles %}
 
 {% block body %}
-    <div class="container panel-container">
+    <div id="hasFile" class="d-none">{% if proposal %}true{% else %}false{% endif %}</div>
+    <div id="fileName" class="d-none">{% if proposal %} {{ proposal.name }}.{{ proposal.extention }} {% else %}none{% endif %}</div>
+
+    <div x-data="{edit: false}" class="container panel-container">
         <h4 class="fw-bold">تصویب پروپوزال</h4>
         <h6 class="text-secondary">در این بخش می‌توانید برای تصویب پروپوزال خود درخواست بدهید.</h6>
 
-        <div class="bg-white shadow d-flex flex-column align-items-center mt-4 mb-4 py-5 rounded-4">
+        <div id="addFile" class="bg-white shadow d-flex flex-column align-items-center mt-4 py-5 rounded-4">
             <i class="bi bi-plus-circle text-secondary" style="font-size: 100px"></i>
             <p>آخرین ویرایش فایل پروپوزال خود را آپلود کنید.</p>
-            <button type="button" class="btn btn-primary">انتخاب فایل</button>
+            <button type="button" class="btn btn-primary" id="select-file-button">انتخاب فایل</button>
         </div>
 
-        <div class="bg-white shadow d-flex flex-column align-items-start mb-5 p-4 rounded-4 border">
-            <h6>اطلاعات پروپوزال</h6>
-            <p>عنوان: </p>
-            <p>رشته: </p>
-            <p>استاد راهنما: </p>
-            <p>استاد مشاور: </p>
-            <p>تاریخ تصویب: </p>
-            <form class="w-100">
-                <div class="mb-3">
-                    <label for="formFile" class="form-label">تأییدیه همانندجویی:</label>
-                    <input class="form-control" type="file" id="formFile">
-                </div>
-                <div class="mb-3">
-                    <label for="formFile" class="form-label">تأییدیه ایرانداک:</label>
-                    <input class="form-control" type="file" id="formFile">
-                </div>
-
-                <div class="d-flex justify-content-center align-items-center mt-4">
-                    <button type="button" class="btn btn-primary">ارسال درخواست</button>
-                </div>
-            </form>
+        <div id="showFile" class="bg-white shadow d-none flex-column align-items-center mt-4 mb-4 py-5 rounded-4">
+            <i class="bi bi-file-earmark text-secondary" style="font-size: 100px"></i>
+            <p id="file-display">آخرین ویرایش فایل پروپوزال خود را آپلود کنید.</p>
+            <div class="d-flex flex-column justify-content-center align-items-center">
+                <form method="post" enctype="multipart/form-data" class="d-flex flex-column justify-content-center align-items-center">
+                    {% csrf_token %}
+                    <input name="file" type="file" accept=".pdf,.doc,.docx" id="file-input" style="display: none;">
+                    <input type="hidden" name="form_type" value="file_only">
+                    <div class="d-flex">
+                        {% if proposal %}
+                            <button type="button" class="btn btn-primary me-3" id="change-file-button" {% if proposal.status == 'در حال تصویب' %}disabled{% endif %}>تغییر فایل</button>
+                            <a type="button" href="{% url 'panel:download_proposal' proposal.id %}" target="_blank" class="btn btn-outline-primary">دانلود</a>
+                            {% else %}
+                            <button type="button" class="btn btn-primary" id="change-file-button" {% if proposal.status == 'در حال تصویب' %}disabled{% endif %}>تغییر فایل</button>
+                        {% endif %}
+                    </div>
+                    <div id="change-file-submit" class="d-none">
+                        <button type="submit" class="btn btn-primary mt-3" {% if proposal.status == 'در حال تصویب' %}disabled{% endif %}>اعمال تغییرات</button>
+                    </div>
+                </form>
+            </div>
         </div>
+
+        {% if proposal %}
+            <div class="bg-white shadow d-flex flex-column align-items-start mb-5 p-4 rounded-4 border">
+                <h6>اطلاعات پروپوزال</h6>
+                <p>عنوان: {{ proposal.name }}</p>
+                <p>رشته: {{ user.profile.study_field }}</p>
+                <p>مقطع: {{ user.profile.maghta }}</p>
+                {% if proposal.prof_rahnama %}
+                <p>استاد راهنما: {{ proposal.prof_rahnama.first_name }} {{ proposal.prof_rahnama.last_name }}</p>
+                {% else %}
+                <p>استاد راهنما: تعیین نشده</p>
+                {% endif %}
+                {% if proposal.prof_moshaver %}
+                    <p>استاد مشاور: {{ proposal.prof_moshaver.first_name }} {{ proposal.prof_moshaver.last_name }}</p>
+                {% else %}
+                    <p>استاد مشاور: تعیین نشده</p>
+                {% endif %}
+                <p>وضعیت: {{ proposal.status }}</p>
+                <form method="post" enctype="multipart/form-data" class="w-100">
+                    {% csrf_token %}
+                    {% if proposal.status == 'در حال تصویب' %}
+                        <p>تأییدیه همانندجویی: 
+                            <a type="button" href="{% url 'panel:download_file' proposal.id 'hamanand' %}" target="_blank" class="btn btn-outline-primary">دانلود</a>
+                        </p>
+
+                        <p>تأییدیه ایرانداک: 
+                            <a type="button" href="{% url 'panel:download_file' proposal.id 'irandoc' %}" target="_blank" class="btn btn-outline-primary">دانلود</a>
+                        </p>
+                    {% else %}
+                        <div class="mb-3">
+                            <label for="formFile" class="form-label">تأییدیه همانندجویی:</label>
+                            <input class="form-control" accept=".pdf,.doc,.docx" name="hamanand_juii_file" type="file" id="formFile">
+                        </div>
+                        <div class="mb-3">
+                            <label for="formFile" class="form-label">تأییدیه ایرانداک:</label>
+                            <input class="form-control" accept=".pdf,.doc,.docx" name="irandoc_file" type="file" id="formFile">
+                        </div>
+
+                        <div class="d-flex justify-content-center align-items-center mt-4">
+                            <button type="submit" class="btn btn-primary" {% if proposal.status == 'در حال تصویب' %}disabled{% endif %}>ارسال درخواست</button>
+                        </div>
+                    {% endif %}
+                </form>
+            </div>
+        {% endif %}
     </div>
 {% endblock body %}
 
-{% block script %}
-{% endblock script %}
+{% block scripts %}
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const addFile = document.getElementById("addFile");
+        const showFile = document.getElementById("showFile");
+        const fileDisplay = document.getElementById("file-display");
+        const selectFileButton = document.getElementById("select-file-button");
+        const changeFileButton = document.getElementById("change-file-button");
+        const changeFileSubmit = document.getElementById("change-file-submit");
+        const fileInput = document.getElementById("file-input");
+        const hasFile = document.getElementById("hasFile").textContent.trim() === 'true';
+        const fileName = document.getElementById("fileName").textContent.trim();
+
+        if (hasFile) {
+            showFile.classList.remove("d-none");
+            showFile.classList.add("d-flex");
+            addFile.classList.remove("d-flex");
+            addFile.classList.add("d-none");
+            fileDisplay.textContent = fileName;
+        }
+
+        selectFileButton.addEventListener("click", function() {
+            fileInput.click();
+        });
+       
+        changeFileButton.addEventListener("click", function() {
+            fileInput.click();
+        });
+
+        fileInput.addEventListener("change", function(event) {
+            const selectedFile = event.target.files[0];
+            if (selectedFile) {
+                fileDisplay.textContent = selectedFile.name;
+                showFile.classList.remove("d-none");
+                showFile.classList.add("d-flex");
+                addFile.classList.remove("d-flex");
+                addFile.classList.add("d-none");
+                changeFileSubmit.classList.remove("d-none");
+                changeFileSubmit.classList.add("d-block");
+            }
+        });
+    });
+</script>
+{% endblock scripts %}

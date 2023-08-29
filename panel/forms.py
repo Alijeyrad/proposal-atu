@@ -14,6 +14,13 @@ class ProposalFormFile(forms.ModelForm):
         model = Proposal
         fields = ['file']
 
+
+class ProposalFormAccept(forms.ModelForm):
+    class Meta:
+        model = Proposal
+        fields = ['hamanand_juii_file', 'irandoc_file']
+    
+
 class ProposalFormProf(forms.ModelForm):
     class Meta:
         model = Proposal

@@ -1,7 +1,7 @@
 import os
 from django.shortcuts import render
 from django.views import View
-from .forms import ProposalFormFile, ProposalFormProf
+from .forms import ProposalFormFile, ProposalFormProf, ProposalFormAccept
 from .models import Proposal
 from django.shortcuts import redirect
 from django.http import HttpResponseRedirect, HttpResponse
@@ -57,8 +57,50 @@ class ProposalInfoView(View):
 
 
 
-def proposal_accept_request(request):
-    return render(request, 'panel-student/proposal-accept-request.html')
+class ProposalAcceptRequestView(View):
+    template_name = 'panel-student/proposal-accept-request.html'
+
+    def get(self, request, *args, **kwargs):
+        proposal = Proposal.objects.filter(owner=request.user.id).first()
+        formFile = ProposalFormFile(instance=proposal)
+        formAccept = ProposalFormAccept(instance=proposal)
+        return render(request, self.template_name, {
+            'formFile': formFile,
+            'formAccept': formAccept,
+            'proposal': proposal
+        })
+
+    def post(self, request, *args, **kwargs):
+        proposal = Proposal.objects.filter(owner=request.user.id).first()
+        form_type = request.POST.get('form_type')
+        
+        if form_type == 'file_only':
+            form = ProposalFormFile(request.POST, request.FILES, instance=proposal)
+            if form.is_valid():
+                proposal = form.save(commit=False)
+                proposal.owner = request.user
+                name = request.FILES['file']
+                file_name, file_extention = os.path.splitext(str(name))
+                proposal.name = file_name
+                proposal.extention = file_extention[1:]
+                proposal.save()
+                return redirect('panel:proposal_accept_request')  # Redirect back to the same page
+        else:
+            form = ProposalFormAccept(request.POST, request.FILES, instance=proposal)
+            if form.is_valid():
+                proposal.status = Proposal.REQEUST_SENT_2
+                form.save()
+                # send confirm message
+                return redirect('panel:proposal_accept_request')
+        
+
+        formFile = ProposalFormFile(instance=proposal)
+        formAccept = ProposalFormAccept(instance=proposal)
+        return render(request, self.template_name, {
+            'formFile': formFile,
+            'formAccept': formAccept,
+            'proposal': proposal
+        })
 
 
 
@@ -81,14 +123,36 @@ def student_chat(request):
 
 
 def download_proposal(request, id):
-    proposal_obj = Proposal.objects.get(pk = id)
-    file_name = proposal_obj.name + '.' + proposal_obj.extention
-    file_path = proposal_obj.file.path
+    proposal = Proposal.objects.get(pk = id)
+    file_name = proposal.name + '.' + proposal.extention
+    file_path = proposal.file.path
 
     mime_type, _ = mimetypes.guess_type(file_path)
-    print(mime_type)
     fl = open(file_path, 'rb')
     response = HttpResponse(fl, content_type=mime_type)
     response['Content-Disposition'] = 'attachment; filename=%s' % file_name
+
+    return response
+
+
+def download_file(request, id, fileName):
+    proposal = Proposal.objects.get(pk = id)
+    if fileName == "hamanand":
+        file_name = proposal.hamanand_juii_file.name
+        file_path = proposal.hamanand_juii_file.path
+
+        mime_type, _ = mimetypes.guess_type(file_path)
+        fl = open(file_path, 'rb')
+        response = HttpResponse(fl, content_type=mime_type)
+        response['Content-Disposition'] = 'attachment; filename=%s' % file_name
+
+    if fileName == "irandoc":
+        file_name = proposal.irandoc_file.name
+        file_path = proposal.hamanand_juii_file.path
+
+        mime_type, _ = mimetypes.guess_type(file_path)
+        fl = open(file_path, 'rb')
+        response = HttpResponse(fl, content_type=mime_type)
+        response['Content-Disposition'] = 'attachment; filename=%s' % file_name
 
     return response

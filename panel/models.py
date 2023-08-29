@@ -15,18 +15,16 @@ class Proposal(models.Model):
 
     objects = jmodels.jManager()
 
-    BAR_RAHNAMA1 = 'بررسی توسط استاد راهنما'
-    TA_ARZYAB2 = 'در انتظار تعیین ارزیاب'
-    ARZYABI3 = 'در حال ارزیابی'
-    REJECTED4 = 'رد شده'
-    ACCEPTED5 = 'تصویب شده'
+    NO_CONFIRM_REQUEST_1 = "هنوز درخواست تصویب داده نشده"
+    REQEUST_SENT_2 = "در حال تصویب"
+    ACCEPTED = "تصویب شده"
+    REJECTED = "رد شده"
 
     STATUS_CHOICES = [
-        (BAR_RAHNAMA1, BAR_RAHNAMA1),
-        (TA_ARZYAB2, TA_ARZYAB2),
-        (ARZYABI3, ARZYABI3),
-        (REJECTED4, REJECTED4),
-        (ACCEPTED5, ACCEPTED5),
+        (NO_CONFIRM_REQUEST_1, NO_CONFIRM_REQUEST_1),
+        (REQEUST_SENT_2, REQEUST_SENT_2),
+        (ACCEPTED, ACCEPTED),
+        (REJECTED, REJECTED),
     ]
 
     file = models.FileField(
@@ -39,7 +37,7 @@ class Proposal(models.Model):
     status = models.CharField(
         max_length=50,
         choices=STATUS_CHOICES,
-        default=BAR_RAHNAMA1,
+        default=NO_CONFIRM_REQUEST_1,
         verbose_name='وضعیت', 
     )
 
@@ -72,6 +70,20 @@ class Proposal(models.Model):
 
     name = models.CharField(max_length=1500, default="")
     extention = models.CharField(max_length=10, default="")
+
+    hamanand_juii_file = models.FileField(
+        upload_to=user_directory_path,
+        validators=[FileExtensionValidator(allowed_extensions=['pdf', 'doc', 'docx'])],
+        blank=True,
+        null=True
+    )
+    
+    irandoc_file = models.FileField(
+        upload_to=user_directory_path,
+        validators=[FileExtensionValidator(allowed_extensions=['pdf', 'doc', 'docx'])],
+        blank=True,
+        null=True
+    )
 
     def __str__(self):
         return f'{self.owner.first_name} {self.owner.last_name}'

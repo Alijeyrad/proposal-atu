@@ -11,7 +11,7 @@
         <h4 class="fw-bold">اطلاعات پروپوزال</h4>
         <h6 class="text-secondary">در این بخش می‌توانید اطلاعات کلی پروپوزال خود را مشاهده کنید.</h6>
 
-        <div id="addFile"  class="bg-white shadow d-flex flex-column align-items-center mt-4 py-5 rounded-4">
+        <div id="addFile" class="bg-white shadow d-flex flex-column align-items-center mt-4 py-5 rounded-4">
             <i class="bi bi-plus-circle text-secondary" style="font-size: 100px"></i>
             <p>آخرین ویرایش فایل پروپوزال خود را آپلود کنید.</p>
             <button type="button" class="btn btn-primary" id="select-file-button">انتخاب فایل</button>
@@ -27,20 +27,23 @@
                     <input type="hidden" name="form_type" value="file_only">
                     <div class="d-flex">
                         {% if proposal %}
-                            <button type="button" class="btn btn-primary me-3" id="change-file-button">تغییر فایل</button>
+                            <button type="button" class="btn btn-primary me-3" id="change-file-button" {% if proposal.status == 'در حال تصویب' %}disabled{% endif %}>تغییر فایل</button>
                             <a type="button" href="{% url 'panel:download_proposal' proposal.id %}" target="_blank" class="btn btn-outline-primary">دانلود</a>
                             {% else %}
-                            <button type="button" class="btn btn-primary" id="change-file-button">تغییر فایل</button>
+                            <button type="button" class="btn btn-primary" id="change-file-button" {% if proposal.status == 'در حال تصویب' %}disabled{% endif %}>تغییر فایل</button>
                         {% endif %}
                     </div>
                     <div id="change-file-submit" class="d-none">
-                        <button type="submit" class="btn btn-primary mt-3">اعمال تغییرات</button>
+                        <button type="submit" class="btn btn-primary mt-3" {% if proposal.status == 'در حال تصویب' %}disabled{% endif %}>اعمال تغییرات</button>
                     </div>
                 </form>
             </div>
         </div>
 
-        <p class="text-info mt-4 mb-5">لطفاً پس از هر ویرایش، آخرین نسخه پروپوزال خود را آپلود کنید.</p>
+        <p class="text-info mt-4">لطفاً پس از هر ویرایش، آخرین نسخه پروپوزال خود را آپلود کنید. نام فایلی که آپلود می‌کنید عنوان پروپوزال شما خواهد بود.</p>
+        {% if proposal.status == 'در حال تصویب' %}
+            <p class="text-danger mt-1 mb-5">پروپوزال در حال تصویب است، ویرایش اطلاعات امکان ندارد.</p>
+        {% endif %}
 
         {% if proposal %}
             <div :class="edit ? 'd-none' : ''"
@@ -53,6 +56,7 @@
                 <h6>اطلاعات پروپوزال</h6>
                 <p>عنوان: {{ proposal.name }}</p>
                 <p>رشته: {{ user.profile.study_field }}</p>
+                <p>مقطع: {{ user.profile.maghta }}</p>
                 {% if proposal.prof_rahnama %}
                 <p>استاد راهنما: {{ proposal.prof_rahnama.first_name }} {{ proposal.prof_rahnama.last_name }}</p>
                 {% else %}
@@ -64,7 +68,7 @@
                     <p>استاد مشاور: تعیین نشده</p>
                 {% endif %}
                 <p>وضعیت: {{ proposal.status }}</p>
-                <button @click="edit=!edit" type="button" class="btn btn-primary">ویرایش اطلاعات</button>
+                <button @click="edit=!edit" type="button" class="btn btn-primary" {% if proposal.status == 'در حال تصویب' %}disabled{% endif %}>ویرایش اطلاعات</button>
             </div>
             
             <div :class="edit ? '' : 'd-none'"
