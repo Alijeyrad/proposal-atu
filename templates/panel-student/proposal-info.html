@@ -26,8 +26,12 @@
                     <input name="file" type="file" accept=".pdf,.doc,.docx" id="file-input" style="display: none;">
                     <input type="hidden" name="form_type" value="file_only">
                     <div class="d-flex">
-                        <button type="button" class="btn btn-primary me-3" id="change-file-button">تغییر فایل</button>
-                        <a type="button" href="{% url 'panel:download_proposal' proposal.id %}" target="_blank" class="btn btn-outline-primary">دانلود</a>
+                        {% if proposal %}
+                            <button type="button" class="btn btn-primary me-3" id="change-file-button">تغییر فایل</button>
+                            <a type="button" href="{% url 'panel:download_proposal' proposal.id %}" target="_blank" class="btn btn-outline-primary">دانلود</a>
+                            {% else %}
+                            <button type="button" class="btn btn-primary" id="change-file-button">تغییر فایل</button>
+                        {% endif %}
                     </div>
                     <div id="change-file-submit" class="d-none">
                         <button type="submit" class="btn btn-primary mt-3">اعمال تغییرات</button>
@@ -48,10 +52,18 @@
             >
                 <h6>اطلاعات پروپوزال</h6>
                 <p>عنوان: {{ proposal.name }}</p>
-                <p>رشته: {{ user.profile }}</p>
+                <p>رشته: {{ user.profile.study_field }}</p>
+                {% if proposal.prof_rahnama %}
                 <p>استاد راهنما: {{ proposal.prof_rahnama.first_name }} {{ proposal.prof_rahnama.last_name }}</p>
-                <p>استاد مشاور: {{ proposal.prof_moshaver.first_name }} {{ proposal.prof_moshaver.last_name }}</p>
-                <p>تاریخ تصویب: {{ proposal.name }}</p>
+                {% else %}
+                <p>استاد راهنما: تعیین نشده</p>
+                {% endif %}
+                {% if proposal.prof_moshaver %}
+                    <p>استاد مشاور: {{ proposal.prof_moshaver.first_name }} {{ proposal.prof_moshaver.last_name }}</p>
+                {% else %}
+                    <p>استاد مشاور: تعیین نشده</p>
+                {% endif %}
+                <p>وضعیت: {{ proposal.status }}</p>
                 <button @click="edit=!edit" type="button" class="btn btn-primary">ویرایش اطلاعات</button>
             </div>
             
