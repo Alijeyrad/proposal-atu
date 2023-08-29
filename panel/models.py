@@ -49,7 +49,7 @@ class Proposal(models.Model):
         User,
         on_delete=models.CASCADE,
         related_name='proposal_profs_rahnama',
-        # limit_choices_to={'is_prof': True},
+        limit_choices_to={'is_prof': True},
         blank=True,
         null=True,
     )
@@ -58,7 +58,7 @@ class Proposal(models.Model):
         User,
         on_delete=models.CASCADE,
         related_name='proposal_profs_moshaver',
-        # limit_choices_to={'is_prof': True},
+        limit_choices_to={'is_prof': True},
         blank=True,
         null=True,
     )
@@ -67,7 +67,7 @@ class Proposal(models.Model):
         User,
         related_name='proposal_profs_arzyab',
         blank=True,
-        # limit_choices_to={'is_prof': True},
+        limit_choices_to={'is_prof': True},
     )
 
     name = models.CharField(max_length=1500, default="")

@@ -4,7 +4,9 @@
 {% block styles %}{% endblock styles %}
 
 {% block body %}
-    <div id="hasFile" class="d-none"></div>
+    <div id="hasFile" class="d-none">{% if proposal %}true{% else %}false{% endif %}</div>
+    <div id="fileName" class="d-none">{% if proposal %} {{ proposal.name }}.{{ proposal.extention }} {% else %}none{% endif %}</div>
+
     <div x-data="{edit: false}" class="container panel-container">
         <h4 class="fw-bold">اطلاعات پروپوزال</h4>
         <h6 class="text-secondary">در این بخش می‌توانید اطلاعات کلی پروپوزال خود را مشاهده کنید.</h6>
@@ -21,58 +23,75 @@
             <div class="d-flex flex-column justify-content-center align-items-center">
                 <form method="post" enctype="multipart/form-data" class="d-flex flex-column justify-content-center align-items-center">
                     {% csrf_token %}
-                    <input name="file" type="file" id="file-input" style="display: none;">
+                    <input name="file" type="file" accept=".pdf,.doc,.docx" id="file-input" style="display: none;">
+                    <input type="hidden" name="form_type" value="file_only">
                     <div class="d-flex">
                         <button type="button" class="btn btn-primary me-3" id="change-file-button">تغییر فایل</button>
-                        <button type="button" class="btn btn-outline-primary">دانلود</button>
+                        <a type="button" href="{% url 'panel:download_proposal' proposal.id %}" target="_blank" class="btn btn-outline-primary">دانلود</a>
                     </div>
-                    <button type="submit" class="btn btn-primary mt-3" id="change-file-button">اعمال تغییرات</button>
+                    <div id="change-file-submit" class="d-none">
+                        <button type="submit" class="btn btn-primary mt-3">اعمال تغییرات</button>
+                    </div>
                 </form>
             </div>
         </div>
 
         <p class="text-info mt-4 mb-5">لطفاً پس از هر ویرایش، آخرین نسخه پروپوزال خود را آپلود کنید.</p>
 
-        <div :class="edit ? 'd-none' : ''"
-        x-show="!edit"
-        style="transition: all 1s"
-        x-transition:enter-start="opacity-0"
-        x-transition:enter-end="opacity-100"
-        class="bg-white shadow d-flex flex-column align-items-start mb-5 p-4 rounded-4 border"
-        >
-            <h6>اطلاعات پروپوزال</h6>
-            <p>عنوان: </p>
-            <p>رشته: </p>
-            <p>استاد راهنما: </p>
-            <p>استاد مشاور: </p>
-            <p>تاریخ تصویب: </p>
-            <button @click="edit=!edit" type="button" class="btn btn-primary">ویرایش اطلاعات</button>
-        </div>
-        
-        <div :class="edit ? '' : 'd-none'"
-        x-show="edit"
-        style="transition: all 1s"
-        x-transition:enter-start="opacity-0"
-        x-transition:enter-end="opacity-100"
-        class="bg-white shadow d-flex flex-column align-items-start mb-5 p-4 rounded-4 border"
-        >
-            <h6>اطلاعات پروپوزال</h6>
-            <form>
-                <div class="mb-3">
-                  <label for="exampleInputEmail1" class="form-label">عنوان</label>
-                  <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
-                </div>
-                
-                <p>استاد راهنما: </p>
-                
-                <p>استاد مشاور: </p>
-                
-            </form>
-            <div class="d-flex align-items-center">
-                <button @click="edit=!edit" type="button" class="btn btn-outline-primary">ذخیره تغییرات</button>
-                <button @click="edit=!edit" type="button" class="btn btn-link d-flex align-items-baseline">بازگشت</button>
+        {% if proposal %}
+            <div :class="edit ? 'd-none' : ''"
+            x-show="!edit"
+            style="transition: all 1s"
+            x-transition:enter-start="opacity-0"
+            x-transition:enter-end="opacity-100"
+            class="bg-white shadow d-flex flex-column align-items-start mb-5 p-4 rounded-4 border"
+            >
+                <h6>اطلاعات پروپوزال</h6>
+                <p>عنوان: {{ proposal.name }}</p>
+                <p>رشته: {{ user.profile }}</p>
+                <p>استاد راهنما: {{ proposal.prof_rahnama.first_name }} {{ proposal.prof_rahnama.last_name }}</p>
+                <p>استاد مشاور: {{ proposal.prof_moshaver.first_name }} {{ proposal.prof_moshaver.last_name }}</p>
+                <p>تاریخ تصویب: {{ proposal.name }}</p>
+                <button @click="edit=!edit" type="button" class="btn btn-primary">ویرایش اطلاعات</button>
             </div>
-        </div>
+            
+            <div :class="edit ? '' : 'd-none'"
+            x-show="edit"
+            style="transition: all 1s"
+            x-transition:enter-start="opacity-0"
+            x-transition:enter-end="opacity-100"
+            class="bg-white shadow d-flex flex-column align-items-start mb-5 p-4 rounded-4 border"
+            >
+                <h6>اطلاعات پروپوزال</h6>
+                <form method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="form_type" value="prof_edit">
+                    <div class="mb-3">
+                        <label for="{{ formProf.prof_rahnama.id_for_label }}" class="form-label">استاد راهنما</label>
+                        <select name="{{ formProf.prof_rahnama.name }}" id="{{ formProf.prof_rahnama.id_for_label }}" class="form-select">
+                            {% for option in formProf.prof_rahnama %}
+                                {{ option }}
+                            {% endfor %}
+                        </select>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="{{ formProf.prof_moshaver.id_for_label }}" class="form-label">استاد راهنما</label>
+                        <select name="{{ formProf.prof_moshaver.name }}" id="{{ formProf.prof_moshaver.id_for_label }}" class="form-select">
+                            {% for option in formProf.prof_moshaver %}
+                                {{ option }}
+                            {% endfor %}
+                        </select>
+                    </div>
+                    
+                    
+                    <div class="d-flex align-items-center">
+                        <button type="submit" class="btn btn-outline-primary">ذخیره تغییرات</button>
+                        <button @click="edit=!edit" type="button" class="btn btn-link d-flex align-items-baseline">بازگشت</button>
+                    </div>
+                </form>
+            </div>
+        {% endif %}
     </div>
 {% endblock body %}
 
@@ -84,12 +103,23 @@
         const fileDisplay = document.getElementById("file-display");
         const selectFileButton = document.getElementById("select-file-button");
         const changeFileButton = document.getElementById("change-file-button");
+        const changeFileSubmit = document.getElementById("change-file-submit");
         const fileInput = document.getElementById("file-input");
+        const hasFile = document.getElementById("hasFile").textContent.trim() === 'true';
+        const fileName = document.getElementById("fileName").textContent.trim();
+
+        if (hasFile) {
+            showFile.classList.remove("d-none");
+            showFile.classList.add("d-flex");
+            addFile.classList.remove("d-flex");
+            addFile.classList.add("d-none");
+            fileDisplay.textContent = fileName;
+        }
 
         selectFileButton.addEventListener("click", function() {
             fileInput.click();
         });
-
+       
         changeFileButton.addEventListener("click", function() {
             fileInput.click();
         });
@@ -102,6 +132,8 @@
                 showFile.classList.add("d-flex");
                 addFile.classList.remove("d-flex");
                 addFile.classList.add("d-none");
+                changeFileSubmit.classList.remove("d-none");
+                changeFileSubmit.classList.add("d-block");
             }
         });
     });

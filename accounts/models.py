@@ -13,6 +13,10 @@ class User(AbstractUser):
     jmodels.jManager()
     
     phone_number = PhoneNumberField(blank=True, verbose_name='شماره تلفن')
+
+    is_student = models.BooleanField(default=True, verbose_name='دانشجو است')
+    
+    is_prof = models.BooleanField(default=False, verbose_name='استاد است')
     
     def __str__(self):
         return f'{self.email}'
@@ -43,12 +47,6 @@ class Profile(models.Model):
     )
 
     student_number = models.CharField(blank=True, null=True, max_length=100, verbose_name='شماره دانشجویی')
-
-    is_student = models.BooleanField(default=True, verbose_name='دانشجو است')
-    
-    is_prof = models.BooleanField(default=False, verbose_name='استاد است')
-
-    proposal_name = models.CharField(max_length=1500)
 
     study_field = models.ForeignKey('StudyField', on_delete=models.CASCADE)
 
