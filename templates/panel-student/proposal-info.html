@@ -28,7 +28,7 @@
                     <div class="d-flex">
                         {% if proposal %}
                             <button type="button" class="btn btn-primary me-3" id="change-file-button" {% if proposal.status == 'در حال تصویب' %}disabled{% endif %}>تغییر فایل</button>
-                            <a type="button" href="{% url 'panel:download_proposal' proposal.id %}" target="_blank" class="btn btn-outline-primary">دانلود</a>
+                            <a type="button" href="{% url 'panel:download_file' proposal.id 'proposal' %}" target="_blank" class="btn btn-outline-primary">دانلود</a>
                             {% else %}
                             <button type="button" class="btn btn-primary" id="change-file-button" {% if proposal.status == 'در حال تصویب' %}disabled{% endif %}>تغییر فایل</button>
                         {% endif %}

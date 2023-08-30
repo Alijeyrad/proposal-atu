@@ -164,31 +164,6 @@ def defa_request(request):
 
 
 
-def download_proposal(request, id):
-    proposal = Proposal.objects.get(pk = id)
-    file_name = proposal.name + '.' + proposal.extention
-    file_path = proposal.file.path
-
-    mime_type, _ = mimetypes.guess_type(file_path)
-    fl = open(file_path, 'rb')
-    response = HttpResponse(fl, content_type=mime_type)
-    response['Content-Disposition'] = 'attachment; filename=%s' % file_name
-
-    return response
-
-def download_dissertation(request, id):
-    dissertation = Dissertation.objects.get(pk = id)
-    file_name = dissertation.name
-    file_path = dissertation.file.path
-
-    mime_type, _ = mimetypes.guess_type(file_path)
-    fl = open(file_path, 'rb')
-    response = HttpResponse(fl, content_type=mime_type)
-    response['Content-Disposition'] = 'attachment; filename=%s' % file_name
-
-    return response
-
-
 def download_file(request, id, fileName):
     if fileName == "hamanand":
         proposal = Proposal.objects.get(pk = id)
@@ -204,6 +179,16 @@ def download_file(request, id, fileName):
         message_obj = Message.objects.get(pk = id)
         file_name = message_obj.file_name + '.' + message_obj.file_extention
         file_path = message_obj.chat_file.path
+
+    if fileName == "proposal":
+        proposal = Proposal.objects.get(pk = id)
+        file_name = proposal.name + '.' + proposal.extention
+        file_path = proposal.file.path
+    
+    if fileName == "dissertation":
+        dissertation = Dissertation.objects.get(pk = id)
+        file_name = dissertation.name + '.' + dissertation.extention
+        file_path = dissertation.file.path
 
     mime_type, _ = mimetypes.guess_type(file_path)
     fl = open(file_path, 'rb')

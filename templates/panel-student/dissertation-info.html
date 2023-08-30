@@ -28,7 +28,7 @@
                     <div class="d-flex">
                         {% if dissertation %}
                             <button type="button" class="btn btn-primary me-3" id="change-file-button" {% if dissertation.status == 'در حال تصویب' %}disabled{% endif %}>تغییر فایل</button>
-                            <a type="button" href="{% url 'panel:download_dissertation' dissertation.id %}" target="_blank" class="btn btn-outline-primary">دانلود</a>
+                            <a type="button" href="{% url 'panel:download_file' dissertation.id 'dissertation' %}" target="_blank" class="btn btn-outline-primary">دانلود</a>
                             {% else %}
                             <button type="button" class="btn btn-primary" id="change-file-button" {% if dissertation.status == 'در حال تصویب' %}disabled{% endif %}>تغییر فایل</button>
                         {% endif %}
