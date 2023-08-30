@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     # third party libraries
+    'django_jalali',
     'phonenumber_field',
 
     # my apps
@@ -46,6 +47,7 @@ INSTALLED_APPS = [
     'home',
     'panel',
     'panel_prof',
+    'chat',
 ]
 
 MIDDLEWARE = [

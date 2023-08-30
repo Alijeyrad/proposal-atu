@@ -38,7 +38,13 @@ def messages(request):
             (Q(sender__id__in = [sender.id, receiver.id]) & Q(receiver__id__in = [sender.id, receiver.id])) 
         ).order_by('-date_sent').first()
 
+        if sender.id == request.user.id:
+            mokhatab = receiver
+        else:
+            mokhatab = sender
+
         couples_list.append({
+            'mokhatab': mokhatab,
             'sender': sender,
             'receiver': receiver,
             'last_message': last_message,
@@ -52,23 +58,22 @@ def messages(request):
         if item['sender'] != item['last_message'].sender:
             couples_list_copy.remove(item)
 
-    paginator = Paginator(couples_list_copy, 10)
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
-    number_of_pages = page_obj.paginator.num_pages
-    number_of_pages_list = [x for x in range(1, number_of_pages + 1)]
 
-    return render(request, 'dashboard/messages.html', {
-        'page_obj': page_obj,
-        'num_pages': number_of_pages_list,
-    })
+    if request.user.is_student:
+        return render(request, 'messages/student-messages.html', {
+            'messages_obj': couples_list_copy,
+        })
+    else:
+        return render(request, 'messages/prof-messages.html', {
+            'messages_obj': couples_list_copy,
+        })
 
 
 
 def chat(request, sender_id, receiver_id):
     if request.user.id not in [sender_id, receiver_id]:
         message_framework.error(request, 'به این صفحه دسترسی ندارید.')
-        return HttpResponseRedirect(reverse('dashboard:chat', args=[request.user.id, sender_id]))
+        return HttpResponseRedirect(reverse('chat:chat', args=[request.user.id, sender_id]))
 
 
     participants = [sender_id, receiver_id]
@@ -94,11 +99,18 @@ def chat(request, sender_id, receiver_id):
     # get the form
     form = ChatForm()
 
-    return render(request, 'dashboard/chat.html', {
-        'messages_obj': messages_obj,
-        'message_sender': message_sender,
-        'form': form,
-    })
+    if request.user.is_student:
+        return render(request, 'messages/student-chat.html', {
+            'messages_obj': messages_obj,
+            'message_sender': message_sender,
+            'form': form,
+        })
+    else:
+        return render(request, 'messages/prof-chat.html', {
+            'messages_obj': messages_obj,
+            'message_sender': message_sender,
+            'form': form,
+        })
 
 
 
@@ -125,10 +137,10 @@ def send_message(request, receiver_id=None):
                 
                 chat_obj.save()
                 message_framework.success(request, 'پیام شما با موفقیت ارسال شد.')
-                return HttpResponseRedirect(reverse('dashboard:chat', args=[request.user.id, receiver_id]))
+                return HttpResponseRedirect(reverse('chat:chat', args=[request.user.id, receiver_id]))
             else:
                 message_framework.error(request, 'مشکلی به وجود آمد. دوباره تلاش کنید.')
-                return HttpResponseRedirect(reverse('dashboard:chat', args=[request.user.id, receiver_id]))
+                return HttpResponseRedirect(reverse('chat:chat', args=[request.user.id, receiver_id]))
                 
 
         # this is when request is coming from
@@ -160,11 +172,15 @@ def send_message(request, receiver_id=None):
                 message_obj.save()
 
                 message_framework.success(request, 'پیام شما با موفقیت ارسال شد.')
-                return HttpResponseRedirect(reverse('dashboard:messages'))
+                return HttpResponseRedirect(reverse('chat:messages'))
             else:
                 message_framework.error(request, 'مشکلی به وجود آمد. دوباره تلاش کنید.')
-                return HttpResponseRedirect(reverse('dashboard:messages'))
+                return HttpResponseRedirect(reverse('chat:messages'))
 
     if request.method == 'GET':
-        form = MessageForm()
-        return render(request, 'dashboard/send_message.html', {'form': form})
+        if request.user.is_student:
+            form = MessageForm()
+            return render(request, 'chat/student-send-messages.html', {'form': form})
+        else:
+            form = MessageForm()
+            return render(request, 'chat/prof-send-messages.html', {'form': form})

@@ -5,7 +5,7 @@
 
 {% block body %}
     <div id="hasFile" class="d-none">{% if dissertation %}true{% else %}false{% endif %}</div>
-    <div id="fileName" class="d-none">{% if dissertation %} {{ dissertation.name }} {% else %}none{% endif %}</div>
+    <div id="fileName" class="d-none">{% if dissertation %} {{ dissertation.name }}.{{ dissertation.extention }} {% else %}none{% endif %}</div>
 
     <div x-data="{edit: false}" class="container panel-container">
         <h4 class="fw-bold">اطلاعات پایان‌نامه</h4>

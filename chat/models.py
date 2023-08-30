@@ -23,8 +23,8 @@ class Message(models.Model):
     content = models.TextField(blank=True, null=True, default="")
     date_sent = models.DateTimeField(auto_now_add=True)
     has_file = models.BooleanField(default=False)
-    file_name = models.CharField(max_length=255, default='')
-    file_extention = models.CharField(max_length=10, default='')
+    file_name = models.CharField(max_length=255, default='', blank=True, null=True,)
+    file_extention = models.CharField(max_length=10, default='', blank=True, null=True,)
     is_read = models.BooleanField(default=False)
     chat_file = models.FileField(
         upload_to=user_directory_path,

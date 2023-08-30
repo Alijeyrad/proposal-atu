@@ -26,6 +26,7 @@ urlpatterns = [
     path('', include('home.urls')),
     path('panel/', include('panel.urls')),
     path('panel-prof/', include('panel_prof.urls')),
+    path('chat/', include('chat.urls')),
 ]
 
 

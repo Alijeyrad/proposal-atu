@@ -23,15 +23,5 @@ def dissertation_judgment(request):
 
 
 
-def prof_messages(request):
-    return render(request, 'panel-prof/prof_messages.html')
-
-
-
-def prof_chat(request):
-    return render(request, 'panel-prof/prof-chat.html')
-
-
-
 def accept_request(request):
     return render(request, 'panel-prof/accept-request.html')

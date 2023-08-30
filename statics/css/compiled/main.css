@@ -9,19 +9,19 @@
   font-family: "Samim";
   src: url("../fonts/Samim-FD.eot"); /* IE9 Compat Modes */
   src: url("../fonts/Samim-FD.eot?#iefix") format("embedded-opentype"), url("../fonts/Samim-FD.woff2") format("woff2"), url("../fonts/Samim-FD.woff") format("woff"), url("../fonts/Samim-FD.ttf") format("truetype"); /* Safari, Android, iOS */
-  font-weight: lighter;
+  font-weight: 400;
 }
 @font-face {
   font-family: "Samim";
   src: url("../fonts/Samim-Medium-FD.eot"); /* IE9 Compat Modes */
   src: url("../fonts/Samim-Medium-FD.eot?#iefix") format("embedded-opentype"), url("../fonts/Samim-Medium-FD.woff2") format("woff2"), url("../fonts/Samim-Medium-FD.woff") format("woff"), url("../fonts/Samim-Medium-FD.ttf") format("truetype"); /* Safari, Android, iOS */
-  font-weight: medium;
+  font-weight: 600;
 }
 @font-face {
   font-family: "Samim";
   src: url("../fonts/Samim-Bold-FD.eot"); /* IE9 Compat Modes */
   src: url("../fonts/Samim-Bold-FD.eot?#iefix") format("embedded-opentype"), url("../fonts/Samim-Bold-FD.woff2") format("woff2"), url("../fonts/Samim-Bold-FD.woff") format("woff"), url("../fonts/Samim-Bold-FD.ttf") format("truetype"); /* Safari, Android, iOS */
-  font-weight: bold;
+  font-weight: 700;
 }
 * {
   font-family: "Samim", sans-serif;

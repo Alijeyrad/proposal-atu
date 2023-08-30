@@ -3,6 +3,7 @@ from django.shortcuts import render
 from django.views import View
 from .forms import ProposalFormFile, ProposalFormProf, ProposalFormAccept, DissertationFormFile, DissertationFormProf
 from .models import Proposal, Dissertation
+from chat.models import Message
 from django.shortcuts import redirect
 from django.http import HttpResponseRedirect, HttpResponse
 from django.core.paginator import Paginator
@@ -45,7 +46,8 @@ class ProposalInfoView(View):
                 proposal.name = file_name
                 proposal.extention = file_extention[1:]
                 proposal.save()
-                return redirect('panel:proposal_info')  # Redirect back to the same page
+                
+                return HttpResponseRedirect(reverse('panel:proposal_info'))
         else:
             form = ProposalFormProf(request.POST, instance=proposal)
             if form.is_valid():
@@ -90,14 +92,15 @@ class ProposalAcceptRequestView(View):
                 proposal.name = file_name
                 proposal.extention = file_extention[1:]
                 proposal.save()
-                return redirect('panel:proposal_accept_request')  # Redirect back to the same page
+                
+                return HttpResponseRedirect(reverse('panel:proposal_accept_request'))
         else:
             form = ProposalFormAccept(request.POST, request.FILES, instance=proposal)
             if form.is_valid():
                 proposal.status = Proposal.REQEUST_SENT_2
                 form.save()
                 # send confirm message
-                return redirect('panel:proposal_accept_request')
+                return HttpResponseRedirect(reverse('panel:proposal_accept_request'))
         
 
         formFile = ProposalFormFile(instance=proposal)
@@ -137,12 +140,13 @@ class DissertationInfoView(View):
                 dissertation.name = file_name
                 dissertation.extention = file_extention[1:]
                 dissertation.save()
-                return redirect('panel:dissertation_info')  # Redirect back to the same page
+                
+                return HttpResponseRedirect(reverse('panel:dissertation_info'))
         else:
             form = DissertationFormProf(request.POST, instance=dissertation)
             if form.is_valid():
                 form.save()
-                return redirect('panel:dissertation_info')
+                return HttpResponseRedirect(reverse('panel:dissertation_info'))
         
 
         formFile = DissertationFormFile(instance=dissertation)
@@ -158,14 +162,6 @@ class DissertationInfoView(View):
 def defa_request(request):
     return render(request, 'panel-student/defa-request.html')
 
-
-
-def student_messages(request):
-    return render(request, 'panel-student/messages.html')
-
-
-def student_chat(request):
-    return render(request, 'panel-student/chat.html')
 
 
 def download_proposal(request, id):
@@ -194,23 +190,24 @@ def download_dissertation(request, id):
 
 
 def download_file(request, id, fileName):
-    proposal = Proposal.objects.get(pk = id)
     if fileName == "hamanand":
+        proposal = Proposal.objects.get(pk = id)
         file_name = proposal.hamanand_juii_file.name
         file_path = proposal.hamanand_juii_file.path
 
-        mime_type, _ = mimetypes.guess_type(file_path)
-        fl = open(file_path, 'rb')
-        response = HttpResponse(fl, content_type=mime_type)
-        response['Content-Disposition'] = 'attachment; filename=%s' % file_name
-
     if fileName == "irandoc":
+        proposal = Proposal.objects.get(pk = id)
         file_name = proposal.irandoc_file.name
         file_path = proposal.hamanand_juii_file.path
 
-        mime_type, _ = mimetypes.guess_type(file_path)
-        fl = open(file_path, 'rb')
-        response = HttpResponse(fl, content_type=mime_type)
-        response['Content-Disposition'] = 'attachment; filename=%s' % file_name
+    if fileName == "message":
+        message_obj = Message.objects.get(pk = id)
+        file_name = message_obj.file_name + '.' + message_obj.file_extention
+        file_path = message_obj.chat_file.path
+
+    mime_type, _ = mimetypes.guess_type(file_path)
+    fl = open(file_path, 'rb')
+    response = HttpResponse(fl, content_type=mime_type)
+    response['Content-Disposition'] = 'attachment; filename=%s' % file_name
 
     return response
