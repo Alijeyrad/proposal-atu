@@ -6,7 +6,6 @@ from .models import Proposal, Dissertation
 from chat.models import Message
 from django.shortcuts import redirect
 from django.http import HttpResponseRedirect, HttpResponse
-from django.core.paginator import Paginator
 from django.db.models import Q, F
 from django.contrib import messages as message_framework
 from django.contrib.auth.decorators import login_required, user_passes_test 
@@ -97,7 +96,8 @@ class ProposalAcceptRequestView(View):
         else:
             form = ProposalFormAccept(request.POST, request.FILES, instance=proposal)
             if form.is_valid():
-                proposal.status = Proposal.REQEUST_SENT_2
+                # change proposal status to 'در انتظار تأیید استاد راهنما'
+                proposal.status = Proposal.WF_RAHNAMA_CONFIRM
                 form.save()
                 # send confirm message
                 return HttpResponseRedirect(reverse('panel:proposal_accept_request'))

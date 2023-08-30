@@ -27,14 +27,14 @@
                     <input type="hidden" name="form_type" value="file_only">
                     <div class="d-flex">
                         {% if proposal %}
-                            <button type="button" class="btn btn-primary me-3" id="change-file-button" {% if proposal.status == 'در حال تصویب' %}disabled{% endif %}>تغییر فایل</button>
+                            <button type="button" class="btn btn-primary me-3" id="change-file-button">تغییر فایل</button>
                             <a type="button" href="{% url 'panel:download_file' proposal.id 'proposal' %}" target="_blank" class="btn btn-outline-primary">دانلود</a>
                             {% else %}
-                            <button type="button" class="btn btn-primary" id="change-file-button" {% if proposal.status == 'در حال تصویب' %}disabled{% endif %}>تغییر فایل</button>
+                            <button type="button" class="btn btn-primary" id="change-file-button">تغییر فایل</button>
                         {% endif %}
                     </div>
                     <div id="change-file-submit" class="d-none">
-                        <button type="submit" class="btn btn-primary mt-3" {% if proposal.status == 'در حال تصویب' %}disabled{% endif %}>اعمال تغییرات</button>
+                        <button type="submit" class="btn btn-primary mt-3">اعمال تغییرات</button>
                     </div>
                 </form>
             </div>
@@ -78,7 +78,7 @@
                         </div>
 
                         <div class="d-flex justify-content-center align-items-center mt-4">
-                            <button type="submit" class="btn btn-primary" {% if proposal.status == 'در حال تصویب' %}disabled{% endif %}>ارسال درخواست</button>
+                            <button type="submit" class="btn btn-primary">ارسال درخواست</button>
                         </div>
                     {% endif %}
                 </form>

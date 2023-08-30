@@ -27,23 +27,20 @@
                     <input type="hidden" name="form_type" value="file_only">
                     <div class="d-flex">
                         {% if proposal %}
-                            <button type="button" class="btn btn-primary me-3" id="change-file-button" {% if proposal.status == 'در حال تصویب' %}disabled{% endif %}>تغییر فایل</button>
+                            <button type="button" class="btn btn-primary me-3" id="change-file-button">تغییر فایل</button>
                             <a type="button" href="{% url 'panel:download_file' proposal.id 'proposal' %}" target="_blank" class="btn btn-outline-primary">دانلود</a>
                             {% else %}
-                            <button type="button" class="btn btn-primary" id="change-file-button" {% if proposal.status == 'در حال تصویب' %}disabled{% endif %}>تغییر فایل</button>
+                            <button type="button" class="btn btn-primary" id="change-file-button">تغییر فایل</button>
                         {% endif %}
                     </div>
                     <div id="change-file-submit" class="d-none">
-                        <button type="submit" class="btn btn-primary mt-3" {% if proposal.status == 'در حال تصویب' %}disabled{% endif %}>اعمال تغییرات</button>
+                        <button type="submit" class="btn btn-primary mt-3">اعمال تغییرات</button>
                     </div>
                 </form>
             </div>
         </div>
 
-        <p class="text-info mt-4 {% if proposal.status != 'در حال تصویب' %}mb-5{% endif %}">لطفاً پس از هر ویرایش، آخرین نسخه پروپوزال خود را آپلود کنید. نام فایلی که آپلود می‌کنید عنوان پروپوزال شما خواهد بود.</p>
-        {% if proposal.status == 'در حال تصویب' %}
-            <p class="text-danger mt-1 mb-5">پروپوزال در حال تصویب است، ویرایش اطلاعات امکان ندارد.</p>
-        {% endif %}
+        <p class="text-info mt-4 mb-5">لطفاً پس از هر ویرایش، آخرین نسخه پروپوزال خود را آپلود کنید. نام فایلی که آپلود می‌کنید عنوان پروپوزال شما خواهد بود.</p>
 
         {% if proposal %}
             <div :class="edit ? 'd-none' : ''"
@@ -68,7 +65,7 @@
                     <p>استاد مشاور: تعیین نشده</p>
                 {% endif %}
                 <p>وضعیت: {{ proposal.status }}</p>
-                <button @click="edit=!edit" type="button" class="btn btn-primary" {% if proposal.status == 'در حال تصویب' %}disabled{% endif %}>ویرایش اطلاعات</button>
+                <button @click="edit=!edit" type="button" class="btn btn-primary">ویرایش اطلاعات</button>
             </div>
             
             <div :class="edit ? '' : 'd-none'"

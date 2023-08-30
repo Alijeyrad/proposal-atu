@@ -15,14 +15,21 @@ class Proposal(models.Model):
 
     objects = jmodels.jManager()
 
+    # wf=waiting for
     NO_CONFIRM_REQUEST_1 = "هنوز درخواست تصویب داده نشده"
-    REQEUST_SENT_2 = "در حال تصویب"
+    WF_RAHNAMA_CONFIRM = "در انتظار تأیید استاد راهنما"
+    WF_MOSHAVER_CONFIRM = "در انتظار تأیید استاد مشاور"
+    WF_ARZYAB_CONFIRM = "در انتظار تأیید استاد ارزیاب"
+    WF_ADMIN_CONFIRM = "در انتظار تأیید مدیر گروه"
     ACCEPTED = "تصویب شده"
     REJECTED = "رد شده"
 
     STATUS_CHOICES = [
         (NO_CONFIRM_REQUEST_1, NO_CONFIRM_REQUEST_1),
-        (REQEUST_SENT_2, REQEUST_SENT_2),
+        (WF_RAHNAMA_CONFIRM, WF_RAHNAMA_CONFIRM),
+        (WF_MOSHAVER_CONFIRM, WF_MOSHAVER_CONFIRM),
+        (WF_ARZYAB_CONFIRM, WF_ARZYAB_CONFIRM),
+        (WF_ADMIN_CONFIRM, WF_ADMIN_CONFIRM),
         (ACCEPTED, ACCEPTED),
         (REJECTED, REJECTED),
     ]
