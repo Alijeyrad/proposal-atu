@@ -19,27 +19,29 @@
               </h2>
               <div id="collapseRahnama" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionRahnama">
 
-                <div class="bg-white d-flex flex-column justify-content-start shadow-sm mt-3 p-4 rounded-4 border">
-                    
-                    <div class="d-flex flex-wrap">
-                        <div class="me-5">
-                            <p><span class="text-secondary" style="font-weight:400;">نام دانشجو: </span>محمدمهدی شیخی</p>
-                            <p><span class="text-secondary" style="font-weight:400;">استاد راهنما: </span>دکتر مهدی خانجانی</p>
-                            <p><span class="text-secondary" style="font-weight:400;">رشته: </span>روان‌شناسی عمومی</p>
+                {% for p in rahnama_proposals %}
+                    <div class="bg-white d-flex flex-column justify-content-start shadow-sm mt-3 p-4 rounded-4 border">
+                        
+                        <div class="d-flex flex-wrap">
+                            <div class="me-5">
+                                <p><span class="text-secondary" style="font-weight:400;">نام دانشجو: </span>{{ p.owner.first_name }} {{ p.owner.last_name }}</p>
+                                <p><span class="text-secondary" style="font-weight:400;">استاد راهنما: </span>دکتر {{ p.prof_rahnama.first_name }} {{ p.prof_rahnama.last_name }}</p>
+                                <p><span class="text-secondary" style="font-weight:400;">رشته: </span>{{ p.owner.profile.study_field }}</p>
+                            </div>
+
+                            <div>
+                                <p><span class="text-secondary" style="font-weight:400;">عنوان: </span>{{ p.name }}</p>
+                                <p><span class="text-secondary" style="font-weight:400;">استاد مشاور: </span>دکتر {{ p.prof_moshaver.first_name }} {{ p.prof_moshaver.last_name }}</p>
+                                <p><span class="text-secondary" style="font-weight:400;">تاریخ تصویب: </span>{{ p.status }}</p>
+                            </div>
                         </div>
 
                         <div>
-                            <p><span class="text-secondary" style="font-weight:400;">عنوان: </span>بررسی عوامل دموگرافیک بر رضایت از ازدواج</p>
-                            <p><span class="text-secondary" style="font-weight:400;">استاد مشاور: </span>دکتر حسین اسکندری</p>
-                            <p><span class="text-secondary" style="font-weight:400;">تاریخ تصویب: </span>هنوز درخواست تصویب داده نشده</p>
+                            <a href="{% url 'chat:chat' user.id p.owner.id %}" class="btn btn-primary me-2">پیام به دانشجو</a>
+                            <a href="{% url 'panel:download_file' p.id 'proposal' %}" class="btn btn-outline-primary">دانلود فایل</a>
                         </div>
                     </div>
-
-                    <div>
-                        <button type="button" class="btn btn-primary me-2">پیام به دانشجو</button>
-                        <button type="button" class="btn btn-outline-primary">دانلود فایل</button>
-                    </div>
-                </div>
+                {% endfor %}
                 
               </div>
             </div>
@@ -58,27 +60,29 @@
               </h2>
               <div id="collapseMoshaver" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionMoshaver">
 
-                <div class="bg-white d-flex flex-column justify-content-start shadow-sm mt-3 p-4 rounded-4 border">
-                    
-                    <div class="d-flex flex-wrap">
-                        <div class="me-5">
-                            <p><span class="text-secondary" style="font-weight:400;">نام دانشجو: </span>محمدمهدی شیخی</p>
-                            <p><span class="text-secondary" style="font-weight:400;">استاد راهنما: </span>دکتر مهدی خانجانی</p>
-                            <p><span class="text-secondary" style="font-weight:400;">رشته: </span>روان‌شناسی عمومی</p>
+                {% for p in moshaver_proposals %}
+                    <div class="bg-white d-flex flex-column justify-content-start shadow-sm mt-3 p-4 rounded-4 border">
+                        
+                        <div class="d-flex flex-wrap">
+                            <div class="me-5">
+                                <p><span class="text-secondary" style="font-weight:400;">نام دانشجو: </span>{{ p.owner.first_name }} {{ p.owner.last_name }}</p>
+                                <p><span class="text-secondary" style="font-weight:400;">استاد راهنما: </span>دکتر {{ p.prof_rahnama.first_name }} {{ p.prof_rahnama.last_name }}</p>
+                                <p><span class="text-secondary" style="font-weight:400;">رشته: </span>{{ p.owner.profile.study_field }}</p>
+                            </div>
+
+                            <div>
+                                <p><span class="text-secondary" style="font-weight:400;">عنوان: </span>{{ p.name }}</p>
+                                <p><span class="text-secondary" style="font-weight:400;">استاد مشاور: </span>دکتر {{ p.prof_moshaver.first_name }} {{ p.prof_moshaver.last_name }}</p>
+                                <p><span class="text-secondary" style="font-weight:400;">تاریخ تصویب: </span>{{ p.status }}</p>
+                            </div>
                         </div>
 
                         <div>
-                            <p><span class="text-secondary" style="font-weight:400;">عنوان: </span>بررسی عوامل دموگرافیک بر رضایت از ازدواج</p>
-                            <p><span class="text-secondary" style="font-weight:400;">استاد مشاور: </span>دکتر حسین اسکندری</p>
-                            <p><span class="text-secondary" style="font-weight:400;">تاریخ تصویب: </span>هنوز درخواست تصویب داده نشده</p>
+                            <a href="{% url 'chat:chat' user.id p.owner.id %}" class="btn btn-primary me-2">پیام به دانشجو</a>
+                            <a href="{% url 'panel:download_file' p.id 'proposal' %}" class="btn btn-outline-primary">دانلود فایل</a>
                         </div>
                     </div>
-
-                    <div>
-                        <button type="button" class="btn btn-primary me-2">پیام به دانشجو</button>
-                        <button type="button" class="btn btn-outline-primary">دانلود فایل</button>
-                    </div>
-                </div>
+                {% endfor %}
                 
               </div>
             </div>
