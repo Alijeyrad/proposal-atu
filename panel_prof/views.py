@@ -5,19 +5,11 @@ from panel.models import Proposal
 
 # Professor panel views
 
-
 class ProposalInfoProfView(View):
     template_name = 'panel-prof/proposal-info.html'
     
     def get(self, request, *args, **kwargs):
-        current_professor = request.user
-        proposals = Proposal.objects.all().filter(
-                Q(prof_rahnama=request.user) | Q(profs_arzyab__id=request.user.id)
-            ).order_by('-date_added')
-
         # Get proposals where the professor is either prof_rahnama or prof_moshaver
-        # proposals = Proposal.objects.filter(prof_rahnama=current_professor) | Proposal.objects.filter(prof_moshaver=current_professor)
-
         rahnama_proposals = Proposal.objects.filter(
             Q(prof_rahnama=request.user)
         )
@@ -34,12 +26,49 @@ class ProposalInfoProfView(View):
 
 
 
-# return render(request, 'panel-prof/proposal-info.html')
 
+class ProposalAcceptProfView(View):
+    template_name = 'panel-prof/proposal-accept.html'
 
+    def get(self, request, *args, **kwargs):
+        proposal_id = kwargs.get('id', False)
+        action = kwargs.get('action', False)
+        
+        if proposal_id:
+            proposal = Proposal.objects.get(pk=proposal_id)
 
-def proposal_accept(request):
-    return render(request, 'panel-prof/proposal-accept.html')
+            if action == "accept-rahnama":
+                proposal.status = Proposal.WF_MOSHAVER_CONFIRM
+                proposal.rahnama_one_accepted = True
+                proposal.save()
+                # message framework
+            
+            elif action == "accept-moshaver":
+                proposal.status = Proposal.WF_ARZYAB_ASIGNMENT
+                proposal.moshaver_one_accepted = True
+                proposal.save()
+                # message framework
+
+            elif action == "reject":
+                # redirect to chat page
+                # message framework
+                h=1
+
+        # Get proposals where the professor is either prof_rahnama or prof_moshaver
+        rahnama_proposals = Proposal.objects.filter(
+            Q(prof_rahnama=request.user) and Q(status=Proposal.WF_RAHNAMA_CONFIRM)
+        )
+
+        moshaver_proposals = Proposal.objects.filter(
+            Q(prof_moshaver=request.user) and Q(status=Proposal.WF_MOSHAVER_CONFIRM)
+        )
+
+        context = {
+            'rahnama_proposals': rahnama_proposals,
+            'moshaver_proposals': moshaver_proposals,
+        }
+        return render(request, self.template_name, context)
+
 
 
 

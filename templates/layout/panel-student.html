@@ -41,8 +41,8 @@
         {% comment %} displays in lg and up without close button {% endcomment %}
         <div class="offcanvas-header pb-0">
             <div class="d-flex flex-column" style="translate: 0 10px">
-                <h6 class="offcanvas-title" >محمد مهدی شیخی</h6>
-                <p>511100171</p>
+                <h6 class="offcanvas-title" >{{ user.first_name }} {{ user.last_name }}</h6>
+                <p>{{ user.user_profile.first.student_number }}</p>
             </div>
             <button type="button" class="btn-close d-lg-none" data-bs-dismiss="offcanvas" aria-label="Close"></button>
         </div>

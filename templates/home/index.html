@@ -9,8 +9,8 @@
     <h2>پروپوزال خود را راحت پیش ببرید</h2>
     <p class="mt-2">پروپوزال خود را به راحتی در اختیار استادان خود قرار دهید.</p>
     <div class="d-flex justify-content-evenly" style="width:270px">
-        <button type="button" class="btn btn-primary">ورود دانشجویان</button>
-        <button type="button" class="btn btn-outline-primary">ورود استادان</button>
+        <a href="{% url 'panel:proposal_info' %}" class="btn btn-primary">ورود دانشجویان</a>
+        <a href="{% url 'panel_prof:proposal_info' %}" class="btn btn-outline-primary">ورود استادان</a>
     </div>
 </div>
 {% endblock body %}

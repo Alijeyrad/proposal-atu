@@ -40,7 +40,7 @@
     <div class="offcanvas offcanvas-start offcanvas-panel" tabindex="-1" id="offcanvas" aria-labelledby="offcanvasLabel" data-bs-scroll="true" data-bs-backdrop="false" >
         {% comment %} displays in lg and up without close button {% endcomment %}
         <div class="offcanvas-header pb-0">
-            <h6 class="offcanvas-title" >دکتر مهدی خانجانی</h6>
+            <h6 class="offcanvas-title" >{{ user.first_name }} {{ user.last_name }}</h6>
             <button type="button" class="btn-close d-lg-none" data-bs-dismiss="offcanvas" aria-label="Close"></button>
         </div>
 

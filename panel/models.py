@@ -19,6 +19,7 @@ class Proposal(models.Model):
     NO_CONFIRM_REQUEST_1 = "هنوز درخواست تصویب داده نشده"
     WF_RAHNAMA_CONFIRM = "در انتظار تأیید استاد راهنما"
     WF_MOSHAVER_CONFIRM = "در انتظار تأیید استاد مشاور"
+    WF_ARZYAB_ASIGNMENT = "در انتظار تعیین استاد ارزیاب"
     WF_ARZYAB_CONFIRM = "در انتظار تأیید استاد ارزیاب"
     WF_ADMIN_CONFIRM = "در انتظار تأیید مدیر گروه"
     ACCEPTED = "تصویب شده"
@@ -95,6 +96,11 @@ class Proposal(models.Model):
         blank=True,
         null=True
     )
+
+    rahnama_one_accepted = models.BooleanField(default=False)
+    rahnama_two_accepted = models.BooleanField(default=False)
+    moshaver_one_accepted = models.BooleanField(default=False)
+    moshaver_two_accepted = models.BooleanField(default=False)
 
     def __str__(self):
         return f'{self.owner.first_name} {self.owner.last_name}'

@@ -41,6 +41,10 @@
                             <a href="{% url 'panel:download_file' p.id 'proposal' %}" class="btn btn-outline-primary">دانلود فایل</a>
                         </div>
                     </div>
+                    {% empty %}
+                    <div class="bg-white d-flex flex-column justify-content-start shadow-sm mt-3 p-4 rounded-4 border">
+                        <p class="m-0">پروپوزالی ندارید</p>
+                    </div>
                 {% endfor %}
                 
               </div>
@@ -81,6 +85,10 @@
                             <a href="{% url 'chat:chat' user.id p.owner.id %}" class="btn btn-primary me-2">پیام به دانشجو</a>
                             <a href="{% url 'panel:download_file' p.id 'proposal' %}" class="btn btn-outline-primary">دانلود فایل</a>
                         </div>
+                    </div>
+                    {% empty %}
+                    <div class="bg-white d-flex flex-column justify-content-start shadow-sm mt-3 p-4 rounded-4 border">
+                        <p class="m-0">پروپوزالی ندارید</p>
                     </div>
                 {% endfor %}
                 

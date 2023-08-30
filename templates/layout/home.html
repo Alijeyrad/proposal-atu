@@ -26,17 +26,17 @@
             <div class="collapse navbar-collapse ps-5">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item a-wrapper mx-3">
-                        <a class="nav-link active a-item" href="#">ورود دانشجویان</a>
+                        <a class="nav-link active a-item" href="{% url 'panel:proposal_info' %}">ورود دانشجویان</a>
                     </li>
                     <li class="nav-item a-wrapper mx-3">
-                        <a class="nav-link active a-item" href="#">ورود استادان</a>
+                        <a class="nav-link active a-item" href="{% url 'panel_prof:proposal_info' %}">ورود استادان</a>
                     </li>
                     <li class="nav-item a-wrapper mx-3">
                         <a class="nav-link active a-item" href="#">پشتیبانی</a>
                     </li>
                     {% if user.is_authenticated %}
                     <li class="nav-item a-wrapper mx-3">
-                        <a class="nav-link active a-item" href="#">پروفایل من</a>
+                        <a class="nav-link active a-item" href="{% url 'panel:proposal_info' %}">پروفایل من</a>
                     </li>
                     {% endif %}
                 </ul>
@@ -60,19 +60,19 @@
         <div class="offcanvas-body">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item mb-2">
-                    <a class="nav-link active" href="#">ورود دانشجویان</a>
+                    <a class="nav-link active" href="{% url 'panel:proposal_info' %}">ورود دانشجویان</a>
                 </li>
                 <li class="nav-item mb-2">
-                    <a class="nav-link active" href="#">ورود استادان</a>
+                    <a class="nav-link active" href="{% url 'panel_prof:proposal_info' %}">ورود استادان</a>
                 </li>
                 <li class="nav-item mb-2">
                     <a class="nav-link active" href="#">پشتیبانی</a>
                 </li>
-                {% comment %} {% if user.is_authenticated %} {% endcomment %}
-                <li class="nav-item mb-2">
-                    <a class="nav-link active" href="#">پروفایل من</a>
-                </li>
-                {% comment %} {% endif %} {% endcomment %}
+                {% if user.is_authenticated %}
+                    <li class="nav-item mb-2">
+                        <a class="nav-link active" href="{% url 'panel:proposal_info' %}">پروفایل من</a>
+                    </li>
+                {% endif %}
             </ul>
         </div>
     </div>

@@ -59,7 +59,7 @@
                 <p>وضعیت: {{ proposal.status }}</p>
                 <form method="post" enctype="multipart/form-data" class="w-100">
                     {% csrf_token %}
-                    {% if proposal.status == 'در حال تصویب' %}
+                    {% if proposal.status != 'هنوز درخواست تصویب داده نشده' %}
                         <p>تأییدیه همانندجویی: 
                             <a type="button" href="{% url 'panel:download_file' proposal.id 'hamanand' %}" target="_blank" class="btn btn-outline-primary">دانلود</a>
                         </p>
