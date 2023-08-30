@@ -6,7 +6,9 @@
 {% block body %}
     <div class="container panel-container pb-5">
         <h4 class="fw-bold">پیام‌ها</h4>
-        <h6 class="text-secondary mb-5">در این بخش می‌توانید با اساتید خود مکاتبه کنید. تمام چک‌ کردن‌های فایل‌های خود را اینجا انجام دهید.</h6>
+        <h6 class="text-secondary">در این بخش می‌توانید با اساتید خود مکاتبه کنید. تمام چک‌ کردن‌های فایل‌های خود را اینجا انجام دهید.</h6>
+        
+        <a href="{% url 'chat:send_new_message' %}" class="btn btn-outline-primary mb-4 mt-3">ارسال پیام جدید</a>
 
         {% for m in messages_obj %}
             <div class="bg-white shadow d-flex flex-column align-items-start mb-4 p-4 rounded-4 border">

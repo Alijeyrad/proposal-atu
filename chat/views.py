@@ -147,6 +147,7 @@ def send_message(request, receiver_id=None):
         # new_message page
         else:
             form = MessageForm(request.POST, request.FILES)
+            receiver = ""
             if form.is_valid():
                 if request.user == form.cleaned_data['receiver']:
                     message_framework.warning(request, 'نمی‌توانید برای خودتان پیام ارسال کنید.')
@@ -169,10 +170,11 @@ def send_message(request, receiver_id=None):
                     message_obj.receiver = form.cleaned_data['receiver']
                     message_obj.content = form.cleaned_data['content']
 
+                receiver = message_obj.receiver.id
                 message_obj.save()
 
                 message_framework.success(request, 'پیام شما با موفقیت ارسال شد.')
-                return HttpResponseRedirect(reverse('chat:messages'))
+                return HttpResponseRedirect(reverse('chat:chat', args=[request.user.id, receiver]))
             else:
                 message_framework.error(request, 'مشکلی به وجود آمد. دوباره تلاش کنید.')
                 return HttpResponseRedirect(reverse('chat:messages'))
@@ -180,7 +182,7 @@ def send_message(request, receiver_id=None):
     if request.method == 'GET':
         if request.user.is_student:
             form = MessageForm()
-            return render(request, 'chat/student-send-messages.html', {'form': form})
+            return render(request, 'messages/student-send-messages.html', {'form': form})
         else:
             form = MessageForm()
-            return render(request, 'chat/prof-send-messages.html', {'form': form})
+            return render(request, 'messages/prof-send-messages.html', {'form': form})
