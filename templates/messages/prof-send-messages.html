@@ -1,54 +1,36 @@
 {% extends 'layout/panel-prof.html' %}
 {% load static %}
+{% load jformat %}
 
 {% block styles %}{% endblock styles %}
 
 {% block body %}
     <div class="container panel-container pb-5">
-        <h4 class="fw-bold">پیام‌ها</h4>
+        <h4 class="fw-bold">ارسال پیام جدید</h4>
         {% comment %} <h6 class="text-secondary mb-5">در این بخش می‌توانید با اساتید خود مکاتبه کنید. تمام چک‌ کردن‌های فایل‌های خود را اینجا انجام دهید.</h6> {% endcomment %}
 
-        <div class="chat-wrapper bg-white shadow d-flex flex-column align-items-start mb-3 mt-5 p-4 rounded-2 border">
-            <div class="messages w-100">
+        <div class="chat-wrapper bg-white shadow d-flex flex-column align-items-start mb-3 mt-5 p-4 rounded-2 border-0" style="height: 333px!important;">
+            <form action="" method="POST" enctype="multipart/form-data" class="chat-form w-100">
+                {% csrf_token %}
 
-                <div class="single-message receiver">
-                    <small>محمدمهدی شیخی</small>
-                    <p>چند دقیقه وقت دارید؟</p>
-                    <small class="text-muted align-self-end">3 دقیقه پیش</small>
-                </div>
+                <select name="{{ form.receiver.name }}" id="{{ form.receiver.id_for_label }}" class="form-select mb-3">
+                    {% for option in form.receiver %}
+                        {{ option }}
+                    {% endfor %}
+                </select>
 
-                <div class="single-message sender">
-                    <small>دکتر مهدی خانجانی</small>
-                    <p>سلام وقت شما هم بخیر</p>
-                    <small class="text-muted align-self-end">3 دقیقه پیش</small>
-                </div>
-
-                <div class="single-message receiver">
-                    <small>محمدمهدی شیخی</small>
-                    <p class="text-info">پروپوزال.docx</p>
-                    <small class="text-muted align-self-end">3 دقیقه پیش</small>
-                </div>
-                
-                <div class="single-message receiver">
-                    <small>محمدمهدی شیخی</small>
-                    <p>این فایل سشیب شسخشصقل سیهذسمر ظزیدتاسد اشیبهعزله نشتسی مناسبه؟</p>
-                    <small class="text-muted align-self-end">3 دقیقه پیش</small>
-                </div>
-
-            </div>
-
-            <form class="chat-form w-100">
                 <div class="mb-3">
-                    <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" placeholder="متن پیام"></textarea>
+                    <textarea name="content" class="form-control" id="chat-textarea-chatpage" rows="3" placeholder="متن پیام"></textarea>
                 </div>
 
                 <div class="mb-3">
-                    <label for="formFile" class="form-label">فایل ضمیمه خود را انتخاب کنید</label>
-                    <input class="form-control" type="file" id="formFile" placeholder="hi">
-                </div>
+                    <label for="id_chat_file" class="form-label">فایل ضمیمه خود را انتخاب کنید</label>
+                    <input class="form-control" type="file" id="id_chat_file" name="chat_file" accept=".pdf, .doc, .docx">
+                </div>                
 
                 <div class="d-flex align-items-center justify-content-center">
-                    <button type="button" class="btn btn-primary">ارسال پیام</button>
+                    <button type="submit" class="btn btn-primary me-2">ارسال پیام</button>
+                    <button id="delete-button" class="btn btn-outline-primary">حذف پیام</button>
                 </div>
             </form>
         </div>
@@ -63,5 +45,15 @@
         element.scrollTop = element.scrollHeight;
     }
     document.addEventListener("DOMContentLoaded", updateScroll())
+    document.addEventListener("DOMContentLoaded", function(){
+        var deletButton = document.getElementById("delete-button");
+        var textarea = document.getElementById("chat-textarea-chatpage");
+        var file = document.getElementById("id_chat_file");
+
+        deletButton.addEventListener("click", function(e){
+            e.preventDefault()
+            textarea.value = "";
+        })
+    })
 </script>
 {% endblock scripts %}

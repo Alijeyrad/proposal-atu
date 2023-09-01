@@ -13,7 +13,7 @@
         {% for m in messages_obj %}
             <div class="bg-white shadow d-flex flex-column align-items-start mb-4 p-4 rounded-4 border">
                 <h6><span class="text-secondary">مخاطب: </span>دکتر {{m.mokhatab.first_name}} {{m.mokhatab.last_name}}</h6>
-                <p class="text-truncate" style="max-width:300px;"><small class="text-secondary">{{m.last_message.content}}</small></p>
+                <p class="text-truncate" style="max-width:300px;"><small class="text-secondary">{{m.last_message.content}}...</small></p>
                 <a href="{% url 'chat:chat' m.sender.id m.receiver.id %}" class="btn btn-primary">باز کردن چت</a>
             </div>
         {% endfor %}

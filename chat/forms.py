@@ -5,6 +5,10 @@ from .models import Message
 
 User = get_user_model()
 
+class MyModelChoiceField(forms.ModelChoiceField):
+    def label_from_instance(self, obj):
+        return f"{obj.first_name} {obj.last_name}"
+
 class ChatForm(forms.ModelForm):
     class Meta:
         model = Message
@@ -26,7 +30,7 @@ class MessageForm(ChatForm):
         
     receivers = User.objects.all().filter(is_prof=True)
         
-    receiver = forms.ModelChoiceField(
+    receiver = MyModelChoiceField(
         queryset = receivers,
         empty_label = 'ارسال به ...',
         to_field_name= 'id'

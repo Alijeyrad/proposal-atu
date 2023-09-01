@@ -9,43 +9,52 @@
         <h6 class="text-secondary">در این بخش می‌توانید با دانشجویانی که به شما مربوط هستند مکاتبه کنید.</h6>
         <h6 class="text-secondary">تمام چک‌ کردن‌های فایل‌های خود را اینجا انجام دهید.</h6>
 
+        <a href="{% url 'chat:send_new_message' %}" class="btn btn-outline-primary mb-2 mt-3">ارسال پیام جدید</a>
+
         <div class="btn-group btn-group-lg w-100 messages-tabs mt-4" role="group" aria-label="Large button group">
             <button @click="showStudentMessages=true" :class="showStudentMessages ? 'current' : ''" type="button" class="btn btn-outline-primary">دانشجویان</button>
             <button @click="showStudentMessages=false" :class="showStudentMessages ? '' : 'current'" type="button" class="btn btn-outline-primary">استادان</button>
         </div>
-    
+
 
         {% comment %} student messages {% endcomment %}
         <div x-cloak x-show.important="showStudentMessages" class="mb-5">
-            <div class="bg-white shadow d-flex flex-column align-items-start mb-3 mt-5 p-4 rounded-4 border">
-                <h6><span class="text-secondary">مخاطب: </span>محمدمهدی شیخی</h6>
-                <p><small class="text-secondary">مقطع: </small>کارشناسی ارشد</p>
-                <p><small class="text-secondary">رشته: </small>روان‌شناسی عمومی</p>
-                <p><small class="text-secondary">عنوان شما: </small>استاد راهنما</p>
-                <button type="button" class="btn btn-primary">باز کردن چت</button>
-            </div>
             
-            <div class="bg-white shadow d-flex flex-column align-items-start mb-3 mt-5 p-4 rounded-4 border">
-                <h6><span class="text-secondary">مخاطب: </span>نیما سلطانی</h6>
-                <p><small class="text-secondary">مقطع: </small>کارشناسی ارشد</p>
-                <p><small class="text-secondary">رشته: </small>روان‌شناسی عمومی</p>
-                <p><small class="text-secondary">عنوان شما: </small>استاد مشاور</p>
-                <button type="button" class="btn btn-primary">باز کردن چت</button>
-            </div>
+            {% for m in messages_obj %}
+                {% if m.mokhatab.is_student %}
+                    <div class="bg-white shadow d-flex flex-column align-items-start mb-3 mt-5 p-4 rounded-4 border">
+                        <h6><span class="text-secondary">مخاطب: </span>{{m.mokhatab.first_name}} {{m.mokhatab.last_name}} {% if not m.last_message.is_read and user != m.sender %}<span class="badge text-bg-danger" style="translate: -5px -3px;font-size:9px;">پیام جدید</span>{% endif %}</h6>
+                        <p><small class="text-secondary">مقطع: </small>{{ m.mokhatab.user_profile.first.get_maghta_display }}</p>
+                        <p><small class="text-secondary">رشته: </small>{{ m.mokhatab.user_profile.first.study_field }}</p>
+                        {% comment %} <p><small class="text-secondary">عنوان شما: </small>استاد راهنما</p> {% endcomment %}
+                        <p class="text-truncate" style="max-width:300px;"><small class="text-secondary">{{m.last_message.content}}...</small></p>
+                        <a href="{% url 'chat:chat' m.sender.id m.receiver.id %}" class="btn btn-primary">باز کردن چت</a>
+                    </div>
+                {% endif %}
+                {% empty %}
+                <div class="bg-white shadow d-flex flex-column align-items-start mb-3 mt-5 p-4 rounded-4 border">
+                    <p>پیامی ندارید.</p>
+                </div>
+            {% endfor %}
         </div>
 
 
         {% comment %} prof messages {% endcomment %}
-        <div x-cloak x-show.important="!showStudentMessages">
-            <div class="bg-white shadow d-flex flex-column align-items-start mb-3 mt-5 p-4 rounded-4 border">
-                <h6><span class="text-secondary">مخاطب: </span>دکتر عیسی مراد</h6>
-                <button type="button" class="btn btn-primary">باز کردن چت</button>
-            </div>
-            
-            <div class="bg-white shadow d-flex flex-column align-items-start mb-3 mt-5 p-4 rounded-4 border">
-                <h6><span class="text-secondary">مخاطب: </span>دکتر حسین اسکندری</h6>
-                <button type="button" class="btn btn-primary">باز کردن چت</button>
-            </div>
+        <div x-cloak x-show.important="!showStudentMessages" class="pt-5">
+            {% for m in messages_obj %}
+                {% if m.mokhatab.is_prof %}
+                    <div class="bg-white shadow d-flex flex-column align-items-start mb-3 mt-b p-4 rounded-4 border">
+                        <h6><span class="text-secondary">مخاطب: </span>{{m.mokhatab.first_name}} {{m.mokhatab.last_name}} {% if not m.last_message.is_read and user != m.sender %}<span class="badge text-bg-danger" style="translate: -5px -3px;font-size:9px;">پیام جدید</span>{% endif %}</h6>
+                        <a href="{% url 'chat:chat' m.sender.id m.receiver.id %}" class="btn btn-primary">باز کردن چت</a>
+                    </div>
+                {% endif %}
+            {% endfor %}
+
+            {% if prof_count == 0 %}
+                <div class="bg-white shadow d-flex flex-column align-items-start mb-3 mt-b p-4 rounded-4 border">
+                    <p class="m-0">پیامی ندارید.</p>
+                </div>
+            {% endif %}
         </div>
 
     </div>

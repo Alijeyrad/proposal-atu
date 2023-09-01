@@ -32,7 +32,7 @@ class Profile(models.Model):
     DOCTORA = 'doctora'
 
     MAGHTA_CHOICES = [
-        (ARSHAD, 'ارشد'),
+        (ARSHAD, 'کارشناسی ارشد'),
         (DOCTORA, 'دکتری'),
     ]
 

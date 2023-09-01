@@ -51,13 +51,18 @@ def messages(request):
         })
 
 
-        couples_list.sort(key=lambda x: x['last_message'].date_sent, reverse=True)
+    couples_list.sort(key=lambda x: x['last_message'].date_sent, reverse=True)
+
 
     couples_list_copy = list(couples_list)
     for item in couples_list:
         if item['sender'] != item['last_message'].sender:
             couples_list_copy.remove(item)
 
+    prof_count = 0
+    for i in couples_list:
+        if i['mokhatab'].is_prof:
+            prof_count += 1
 
     if request.user.is_student:
         return render(request, 'messages/student-messages.html', {
@@ -66,6 +71,7 @@ def messages(request):
     else:
         return render(request, 'messages/prof-messages.html', {
             'messages_obj': couples_list_copy,
+            'prof_count': prof_count,
         })
 
 
@@ -151,11 +157,11 @@ def send_message(request, receiver_id=None):
             if form.is_valid():
                 if request.user == form.cleaned_data['receiver']:
                     message_framework.warning(request, 'نمی‌توانید برای خودتان پیام ارسال کنید.')
-                    return HttpResponseRedirect(reverse('dashboard:send_message'))
+                    return HttpResponseRedirect(reverse('chat:send_new_message'))
                 
                 if not form.cleaned_data['receiver']:
                     message_framework.warning(request, 'دریافت کننده پیام را انتخاب کنید.')
-                    return HttpResponseRedirect(reverse('dashboard:send_message'))
+                    return HttpResponseRedirect(reverse('chat:send_new_message'))
 
                 if request.FILES.get('chat_file', False):
                     message_obj = Message(chat_file=request.FILES['chat_file'])
