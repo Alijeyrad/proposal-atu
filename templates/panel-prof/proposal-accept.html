@@ -39,8 +39,18 @@
 
                         <div>
                             <a href="{% url 'panel:download_file' p.id 'proposal' %}" target="_blank"class="btn btn-primary me-2 mt-1">دانلود فایل</a>
-                            <a href="{% url 'panel_prof:proposal_accept_action' p.id 'accept-rahnama' %}" class="btn btn-primary me-2 mt-1">تأیید</a>
-                            <a href="{% url 'panel_prof:proposal_accept_action' p.id 'reject' %}" class="btn btn-outline-primary mt-1">نیاز به اصلاح</a>
+                            <form method="post" style="display:inline;">
+                                {% csrf_token %}
+                                <input type="hidden" name="proposal_id" value="{{p.id}}">
+                                <input type="hidden" name="action" value="accept-rahnama">
+                                <button class="btn btn-primary me-2 mt-1">تأیید</button>
+                            </form>
+                            <form method="post" style="display:inline;">
+                                {% csrf_token %}
+                                <input type="hidden" name="proposal_id" value="{{p.id}}">
+                                <input type="hidden" name="action" value="reject">
+                                <button class="btn btn-outline-primary mt-1">نیاز به اصلاح</button>
+                            </form>
                         </div>
                     </div>
                     {% empty %}
@@ -86,8 +96,18 @@
 
                         <div>
                             <a href="{% url 'panel:download_file' p.id 'proposal' %}" target="_blank" class="btn btn-primary me-2 mt-1">دانلود فایل</a>
-                            <a href="{% url 'panel_prof:proposal_accept_action' p.id 'accept-moshaver' %}" class="btn btn-primary me-2 mt-1">تأیید</a>
-                            <a href="{% url 'panel_prof:proposal_accept_action' p.id 'reject' %}" class="btn btn-outline-primary mt-1">نیاز به اصلاح</a>
+                            <form method="post" style="display:inline;">
+                                {% csrf_token %}
+                                <input type="hidden" name="proposal_id" value="{{p.id}}">
+                                <input type="hidden" name="action" value="accept-moshaver">
+                                <button class="btn btn-primary me-2 mt-1">تأیید</button>
+                            </form>
+                            <form method="post" style="display:inline;">
+                                {% csrf_token %}
+                                <input type="hidden" name="proposal_id" value="{{p.id}}">
+                                <input type="hidden" name="action" value="reject">
+                                <button class="btn btn-outline-primary mt-1">نیاز به اصلاح</button>
+                            </form>
                         </div>
                     </div>
                     {% empty %}
