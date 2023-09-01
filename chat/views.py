@@ -17,144 +17,122 @@ from .forms import MessageForm, ChatForm
 
 User = get_user_model()
 
-def messages(request):
-    related_messages = Message.objects.all().filter(
-        Q(sender__id=request.user.id) | Q(receiver__id=request.user.id)
-    ).order_by('-date_sent')
+class MessagesView(View):
+    def get(self, request):
+        # Get related messages, ordered by date_sent
+        related_messages = Message.objects.filter(
+            Q(sender=request.user) | Q(receiver=request.user)
+        ).order_by('-date_sent').select_related('sender', 'receiver')
 
-    couples_set = set()
-    for m in related_messages:
-        if m.sender != m.receiver:
-            couple = (m.sender, m.receiver)
+        couples = {}
+        prof_count = 0
 
-            couples_set.add(couple)
-            
-    
-    couples_list = list()
-    for c in couples_set:
-        sender = c[0]
-        receiver = c[1]
-        last_message = Message.objects.all().filter(
-            (Q(sender__id__in = [sender.id, receiver.id]) & Q(receiver__id__in = [sender.id, receiver.id])) 
-        ).order_by('-date_sent').first()
+        for message in related_messages:
+            if message.sender != message.receiver:
+                # Define a unique key for each conversation
+                conversation_key = tuple(sorted((message.sender.id, message.receiver.id)))
 
-        if sender.id == request.user.id:
-            mokhatab = receiver
-        else:
-            mokhatab = sender
+                if conversation_key not in couples:
+                    couples[conversation_key] = {
+                        'mokhatab': message.receiver if message.sender == request.user else message.sender,
+                        'sender': message.sender,
+                        'receiver': message.receiver,
+                        'last_message': message,
+                    }
 
-        couples_list.append({
-            'mokhatab': mokhatab,
-            'sender': sender,
-            'receiver': receiver,
-            'last_message': last_message,
-        })
+                    if couples[conversation_key]['mokhatab'].is_prof:
+                        prof_count += 1
 
+        # Sort conversations by the date of the last message
+        sorted_couples = sorted(couples.values(), key=lambda x: x['last_message'].date_sent, reverse=True)
 
-    couples_list.sort(key=lambda x: x['last_message'].date_sent, reverse=True)
+        template = 'messages/student-messages.html' if request.user.is_student else 'messages/prof-messages.html'
 
-
-    couples_list_copy = list(couples_list)
-    for item in couples_list:
-        if item['sender'] != item['last_message'].sender:
-            couples_list_copy.remove(item)
-
-    prof_count = 0
-    for i in couples_list:
-        if i['mokhatab'].is_prof:
-            prof_count += 1
-
-    if request.user.is_student:
-        return render(request, 'messages/student-messages.html', {
-            'messages_obj': couples_list_copy,
-        })
-    else:
-        return render(request, 'messages/prof-messages.html', {
-            'messages_obj': couples_list_copy,
+        context = {
+            'messages_obj': sorted_couples,
             'prof_count': prof_count,
-        })
+        }
+
+        return render(request, template, context)
 
 
 
-def chat(request, sender_id, receiver_id):
-    if request.user.id not in [sender_id, receiver_id]:
-        message_framework.error(request, 'به این صفحه دسترسی ندارید.')
-        return HttpResponseRedirect(reverse('chat:chat', args=[request.user.id, sender_id]))
 
+class ChatView(View):
+    def get(self, request, sender_id, receiver_id):
+        if request.user.id not in [sender_id, receiver_id]:
+            message_framework.error(request, 'به این صفحه دسترسی ندارید.')
+            return HttpResponseRedirect(reverse('chat:chat', args=[request.user.id, sender_id]))
 
-    participants = [sender_id, receiver_id]
-    messages_obj = Message.objects.all().filter(
-        Q(sender__id__in = participants) & Q(receiver__id__in = participants)
-    ).exclude(
-        sender__id = F('receiver__id')
-    ).order_by('date_sent')
+        # Get the conversation messages, ordered by date_sent
+        participants = [sender_id, receiver_id]
+        messages_obj = Message.objects.filter(
+            Q(sender__id__in=participants) & Q(receiver__id__in=participants)
+        ).exclude(sender=F('receiver')).order_by('date_sent')
 
-    last_message = messages_obj.last()
+        # Update unread status for the last message
+        last_message = messages_obj.last()
+        if last_message and request.user != last_message.sender:
+            messages_obj.update(is_read=True)
 
-    if request.user != last_message.sender:
-        save_messages = messages_obj.update(is_read = True)
+        # Determine the message sender
+        message_sender_id = receiver_id if request.user.id == sender_id else sender_id
+        message_sender = User.objects.get(id=message_sender_id)
 
-    # check to see who is the message sender
-    # and send their id to the template
-    message_sender = ''
-    if request.user.id == sender_id:
-        message_sender = User.objects.get(id=receiver_id)
-    else:
-        message_sender = User.objects.get(id=sender_id)
+        # Prepare the form
+        form = ChatForm()
 
-    # get the form
-    form = ChatForm()
+        # Choose the template based on user type
+        template = 'messages/student-chat.html' if request.user.is_student else 'messages/prof-chat.html'
 
-    if request.user.is_student:
-        return render(request, 'messages/student-chat.html', {
+        context = {
             'messages_obj': messages_obj,
             'message_sender': message_sender,
             'form': form,
-        })
-    else:
-        return render(request, 'messages/prof-chat.html', {
-            'messages_obj': messages_obj,
-            'message_sender': message_sender,
-            'form': form,
-        })
+        }
+
+        return render(request, template, context)
 
 
 
-def send_message(request, receiver_id=None):
-    if request.method == 'POST':
+class SendMessageView(View):
+    def post(self, request, receiver_id=None):
+        """
+            if request is coming from new_message => then a reciever_id is sent through the form
+            (messages/student-send-messages.html or messages/prof-send-messages.html) page
 
-        # this is when request is coming from
-        # chat page => then a reciever_id is sent
+            this is when request is coming from chat page => then a reciever_id is sent in the request
+            (messages/student-chat.html or messages/prof-chat.html) 
+        """
+
         if receiver_id is not None:
-            receiver = User.objects.get(id=receiver_id)
             form = ChatForm(request.POST, request.FILES)
-            if form.is_valid():
-                chat_obj = Message()
-                chat_obj.receiver = receiver
-                chat_obj.sender = request.user
+        else:
+            form = MessageForm(request.POST, request.FILES)
+        
+        if form.is_valid():
+            message_obj = Message()
+            message_obj.sender = request.user
+            
+            if receiver_id is not None:
+                receiver = User.objects.get(id=receiver_id)
+                message_obj.receiver = receiver
+                message_obj.content = form.cleaned_data['content']
+                
                 if request.FILES.get('chat_file', False):
                     name = request.FILES.get('chat_file')
                     file_name, file_extention = os.path.splitext(str(name))
-                    chat_obj.chat_file = request.FILES['chat_file']
-                    chat_obj.has_file = True
-                    chat_obj.file_name = file_name
-                    chat_obj.file_extention = file_extention
-                chat_obj.content = form.cleaned_data['content']
-                
-                chat_obj.save()
-                message_framework.success(request, 'پیام شما با موفقیت ارسال شد.')
-                return HttpResponseRedirect(reverse('chat:chat', args=[request.user.id, receiver_id]))
+                    message_obj.chat_file = request.FILES['chat_file']
+                    message_obj.has_file = True
+                    message_obj.file_name = file_name
+                    message_obj.file_extension = file_extention
             else:
-                message_framework.error(request, 'مشکلی به وجود آمد. دوباره تلاش کنید.')
-                return HttpResponseRedirect(reverse('chat:chat', args=[request.user.id, receiver_id]))
+                message_obj.receiver = form.cleaned_data['receiver']
+                if request.FILES.get('chat_file', False):
+                    message_obj.chat_file = request.FILES['chat_file']
+                    message_obj.has_file = True
+                message_obj.content = form.cleaned_data['content']
                 
-
-        # this is when request is coming from
-        # new_message page
-        else:
-            form = MessageForm(request.POST, request.FILES)
-            receiver = ""
-            if form.is_valid():
                 if request.user == form.cleaned_data['receiver']:
                     message_framework.warning(request, 'نمی‌توانید برای خودتان پیام ارسال کنید.')
                     return HttpResponseRedirect(reverse('chat:send_new_message'))
@@ -163,32 +141,16 @@ def send_message(request, receiver_id=None):
                     message_framework.warning(request, 'دریافت کننده پیام را انتخاب کنید.')
                     return HttpResponseRedirect(reverse('chat:send_new_message'))
 
-                if request.FILES.get('chat_file', False):
-                    message_obj = Message(chat_file=request.FILES['chat_file'])
-                    message_obj.is_file = True
-                    message_obj.sender = request.user
-                    message_obj.receiver = form.cleaned_data['receiver']
-                    if form.cleaned_data['content']:
-                        message_obj.content = form.cleaned_data['content']
-                else:
-                    message_obj = Message()
-                    message_obj.sender = request.user
-                    message_obj.receiver = form.cleaned_data['receiver']
-                    message_obj.content = form.cleaned_data['content']
-
-                receiver = message_obj.receiver.id
-                message_obj.save()
-
-                message_framework.success(request, 'پیام شما با موفقیت ارسال شد.')
-                return HttpResponseRedirect(reverse('chat:chat', args=[request.user.id, receiver]))
-            else:
-                message_framework.error(request, 'مشکلی به وجود آمد. دوباره تلاش کنید.')
-                return HttpResponseRedirect(reverse('chat:messages'))
-
-    if request.method == 'GET':
-        if request.user.is_student:
-            form = MessageForm()
-            return render(request, 'messages/student-send-messages.html', {'form': form})
+            message_obj.save()
+            message_framework.success(request, 'پیام شما با موفقیت ارسال شد.')
+            return HttpResponseRedirect(reverse('chat:chat', args=[request.user.id, message_obj.receiver.id]))
         else:
-            form = MessageForm()
-            return render(request, 'messages/prof-send-messages.html', {'form': form})
+            message_framework.error(request, 'مشکلی به وجود آمد. دوباره تلاش کنید.')
+            if receiver_id is not None:
+                return HttpResponseRedirect(reverse('chat:chat', args=[request.user.id, receiver_id]))
+            return HttpResponseRedirect(reverse('chat:messages'))
+    
+    def get(self, request):
+        form = MessageForm()
+        template = 'messages/student-send-messages.html' if request.user.is_student else 'messages/prof-send-messages.html'
+        return render(request, template, {'form': form})
