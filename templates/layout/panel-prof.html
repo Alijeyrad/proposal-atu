@@ -1,4 +1,5 @@
 {% load static %}
+{% load chat_tags %}
 
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
@@ -70,6 +71,7 @@
                 <a class="sidebar-item {% if request.resolver_match.view_name == 'chat:messages' %}current{% endif %}" href="{% url 'chat:messages' %}">
                     <i class="bi bi-chat-left-text fs-4" style="color:#FF77B8;"></i>
                     پیام‌ها
+                    {% show_notif user %}
                 </a>
                 
                 <a class="sidebar-item {% if request.resolver_match.view_name == 'panel_prof:accept_request' %}current{% endif %}" href="{% url 'panel_prof:accept_request' %}">
