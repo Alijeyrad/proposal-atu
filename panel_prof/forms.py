@@ -32,6 +32,9 @@ class ProposalAdminForm(forms.ModelForm):
 
     profs = User.objects.filter(is_prof=True)
 
+    p_id = forms.IntegerField()
+
     profs_arzyab = MyModelMultipleChoiceField(
         queryset=profs,
+        to_field_name= 'id',
     )

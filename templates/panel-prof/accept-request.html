@@ -27,7 +27,7 @@
                 </h2>
                 <div id="collapseNewProposals" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionNewProposals">
 
-                    {% for p in wf_admin_proposals %}
+                    {% for p in wf_arzyab_proposals %}
                         <div class="bg-white d-flex flex-column justify-content-start shadow-sm mt-3 p-4 rounded-4 border">
                             
                             <div class="d-flex flex-wrap">
@@ -58,10 +58,15 @@
                                         {{ option }}
                                     {% endfor %}
                                 </select>
+                                <input type="hidden" name="p_id" value="{{p.id}}">
 
                                 <button type="submit" class="btn btn-primary me-2 ms-2 mb-2">ارسال به استادهای ارزیاب</button>
                             </form>
                         </div>
+                        {% empty %}
+                        <div class="bg-white d-flex flex-column justify-content-start shadow-sm mt-3 p-4 rounded-4 border">
+                            <p class="m-0">پروپوزالی ندارید</p>
+                        </div>  
                     {% endfor %}
                     
                 </div>
@@ -103,6 +108,10 @@
                                 <a target="_balnk" href="{% url 'panel:download_file' p.id 'proposal' %}" class="btn btn-primary me-2 mb-2">دانلود فایل</a>
                             </div>
                         </div>
+                        {% empty %}
+                        <div class="bg-white d-flex flex-column justify-content-start shadow-sm mt-3 p-4 rounded-4 border">
+                            <p class="m-0">پروپوزالی ندارید</p>
+                        </div> 
                     {% endfor %}
                     
                 </div>

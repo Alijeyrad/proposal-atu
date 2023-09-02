@@ -87,6 +87,25 @@ class ProposalAcceptView(View):
 class AcceptRequest(View):
     template_name = 'panel-prof/accept-request.html'
 
+    def post(self, request, *args, **kwargs):
+        form = ProposalAdminForm(request.POST)
+        
+        if form.is_valid():
+            proposal_id = form.cleaned_data['p_id']
+            proposal = Proposal.objects.get(pk=proposal_id)
+            
+            # Update the proposal instance with the form data and save it
+            form = ProposalAdminForm(request.POST, instance=proposal)
+            proposal = form.save(commit=False)  # Save without committing to the database
+            
+            proposal.status = Proposal.WF_ARZYAB_CONFIRM
+            proposal.save()  # Save the updated status
+            message_framework.success(request, 'WF_ARZYAB_CONFIRM')
+            return HttpResponseRedirect(reverse('panel_prof:accept_request'))
+        else:
+            message_framework.error(request, 'مشکل')
+            return HttpResponseRedirect(reverse('panel_prof:accept_request'))
+
     def get(self, request, *args, **kwargs):
         # get all proposals waiting for arzyab asignment
         wf_arzyab_proposals = Proposal.objects.filter(
