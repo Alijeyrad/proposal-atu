@@ -10742,6 +10742,14 @@ textarea.form-control-lg {
     display: none !important;
   }
 }
+.select2-selection__rendered, .select2-search__field {
+  width: 100%;
+}
+
+.select2-container--bootstrap-5 {
+  margin-bottom: 0.5rem !important;
+}
+
 [x-cloak] {
   display: none !important;
 }

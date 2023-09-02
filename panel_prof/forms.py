@@ -1,5 +1,14 @@
 from django import forms
 from panel.models import Proposal
+from django.contrib.auth import get_user_model
+
+
+User = get_user_model()
+
+class MyModelMultipleChoiceField(forms.ModelMultipleChoiceField):
+    def label_from_instance(self, obj):
+        return f"{obj.first_name} {obj.last_name}"
+
 
 class ProposalActionForm(forms.Form):
     proposal_id = forms.IntegerField()
@@ -14,3 +23,15 @@ class ProposalActionForm(forms.Form):
             raise forms.ValidationError("Invalid proposal ID.")
 
         return cleaned_data
+
+
+class ProposalAdminForm(forms.ModelForm):
+    class Meta:
+        model = Proposal
+        fields = ['profs_arzyab']
+
+    profs = User.objects.filter(is_prof=True)
+
+    profs_arzyab = MyModelMultipleChoiceField(
+        queryset=profs,
+    )

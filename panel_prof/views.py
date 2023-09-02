@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.views import View
 from django.db.models import Q, F
 from panel.models import Proposal
-from .forms import ProposalActionForm
+from .forms import ProposalActionForm, ProposalAdminForm
 from django.urls import reverse
 from django.shortcuts import redirect
 from django.http import HttpResponseRedirect, HttpResponse
@@ -28,7 +28,6 @@ class ProposalInfoProfView(View):
             'moshaver_proposals': moshaver_proposals,
         }
         return render(request, self.template_name, context)
-
 
 
 
@@ -85,6 +84,31 @@ class ProposalAcceptView(View):
 
 
 
+class AcceptRequest(View):
+    template_name = 'panel-prof/accept-request.html'
+
+    def get(self, request, *args, **kwargs):
+        # get all proposals waiting for arzyab asignment
+        wf_arzyab_proposals = Proposal.objects.filter(
+            Q(status=Proposal.WF_ARZYAB_ASIGNMENT)
+        )
+
+        # get all proposals waiting for final confirmation
+        wf_admin_proposals = Proposal.objects.filter(
+            Q(status=Proposal.WF_ADMIN_CONFIRM)
+        )
+
+        form = ProposalAdminForm()
+
+        context = {
+            'wf_arzyab_proposals': wf_arzyab_proposals,
+            'wf_admin_proposals': wf_admin_proposals,
+            'form': form
+        }
+        
+        return render(request, self.template_name, context)
+
+
 
 def proposal_assessment(request):
     return render(request, 'panel-prof/proposal-assessment.html')
@@ -94,7 +118,3 @@ def proposal_assessment(request):
 def dissertation_judgment(request):
     return render(request, 'panel-prof/dissertation-judgment.html')
 
-
-
-def accept_request(request):
-    return render(request, 'panel-prof/accept-request.html')
